@@ -103,17 +103,18 @@ h1 + p{margin:0 0 20px;color:var(--tinta2);font-size:14px;max-width:62ch}
 .pastilla.al{color:var(--alerta);background:var(--alertas)}
 
 /* Miniatura de tema */
-.mtema{position:absolute;inset:0;display:grid;grid-template-rows:42% 1fr}
-.mtema .a{background:linear-gradient(160deg,#3A2A20,#15100C)}
-.mtema .b{padding:0 10% 8%;display:grid;align-content:start;gap:6%;margin-top:-6%;border-radius:10px 10px 0 0}
-.mtema i{display:block;border-radius:5px;height:14%}
+.mtema{position:absolute;inset:0;overflow:hidden}
+.mtema .a{position:absolute;left:0;right:0;top:0;height:42%;background:linear-gradient(160deg,#3A2A20,#15100C)}
+.mtema .b{position:absolute;left:0;right:0;top:34%;bottom:0;padding:9px 12% 0;display:flex;flex-direction:column;gap:5px;
+  border-radius:10px 10px 0 0}
+.mtema i{display:block;flex:none;height:9px;border-radius:4px}
 .mtema.ios .b{background:#F2F4F7}
-.mtema.ios i{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.08)}
-.mtema.ios i.btn{background:#0B0B0D;height:11%}
+.mtema.ios i{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.mtema.ios i.btn{background:#0B0B0D}
 .mtema.vid .a{background:linear-gradient(160deg,#15464A,#0B2124)}
-.mtema.vid .b{background:linear-gradient(#0E2A2D,#07100F)}
+.mtema.vid .b{background:linear-gradient(#0E2A2D,#07100F);border-top:1px solid rgba(255,255,255,.18)}
 .mtema.vid i{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22)}
-.mtema.vid i.btn{background:var(--ac);border-color:var(--ac);height:11%}
+.mtema.vid i.btn{background:var(--ac);border-color:var(--ac)}
 
 /* Color */
 .muestras{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
