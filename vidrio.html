@@ -1,0 +1,1156 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex">
+<title>Página pública de vidrio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Columna de teléfono: portada ilustrada arriba, logo montado en el borde, una hoja de
+   vidrio que sube encima y renglones que abren hojas modales en lugar de navegar.
+   Tema único oscuro a propósito: es la identidad "nocturna" de este local (marca.fondo),
+   igual que en src/vistas/base.ts, donde el fondo del negocio decide el tema y no el visitante. */
+:root{
+  color-scheme:dark;
+  /* Tokens del chasis real (base.ts, tema oscuro) */
+  --ac:#D9503C; --acx:#20150A;
+  --tx:#FFFFFF; --tx2:rgba(255,255,255,.70); --tx3:rgba(255,255,255,.46);
+  --gl:rgba(255,255,255,.09); --glf:rgba(255,255,255,.17); --br:rgba(255,255,255,.20); --hi:rgba(255,255,255,.42);
+  --bl:17px;
+  /* Propios de este prototipo */
+  --bg:#07100F; --bg0:#020605;
+  --glm:rgba(11,29,31,.80);           /* vidrio de las hojas modales: más opaco para leer */
+  --sol:rgba(0,0,0,.20);              /* lámina oscura para códigos y mapas */
+  --apagado:rgba(255,255,255,.20);
+  --ok:#72D8A6;                       /* semántico: abierto */
+  --wa:#0B5C4E;                       /* burbuja de WhatsApp */
+  --teal1:#1F5E60; --teal2:#0B2225; --laton:#E9B872;
+  --sombra:rgba(0,0,0,.55); --cortina:rgba(2,8,8,.46);
+  --fondo:radial-gradient(110% 80% at 12% 5%, #124A50 0%, rgba(18,74,80,0) 55%),
+          radial-gradient(90% 70% at 88% 25%, #1E6E5A 0%, rgba(30,110,90,0) 50%),
+          linear-gradient(160deg, #0C2226, #07100F);
+  --velo:linear-gradient(180deg,rgba(0,0,0,.20),rgba(0,0,0,.32) 45%,rgba(0,0,0,.58));
+  --resorte:cubic-bezier(.32,.72,0,1); --rebote:cubic-bezier(.34,1.56,.64,1); --suave:cubic-bezier(.22,1,.36,1);
+  --ui:"Archivo","Segoe UI",system-ui,sans-serif;
+  --dp:"Bricolage Grotesque","Archivo",system-ui,sans-serif;
+  --mo:"IBM Plex Mono",ui-monospace,"Cascadia Mono",monospace;
+  --p:0; /* qué tan abierta está la hoja modal (0..1): encoge la página y oscurece la cortina */
+}
+.con-hoja{--p:1}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;height:100%}
+body{font-family:var(--ui);color:var(--tx);background:var(--bg0);-webkit-font-smoothing:antialiased;
+  overflow:hidden;-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ============ El marco: la página que se encoge detrás de la hoja ============ */
+.marco{position:fixed;inset:0;overflow:hidden;background:var(--bg);transform-origin:50% 0;
+  transform:translateY(calc((env(safe-area-inset-top,0px) + 10px) * var(--p))) scale(calc(1 - .06 * var(--p)));
+  border-radius:calc(26px * var(--p));
+  transition:transform .45s var(--resorte),border-radius .45s var(--resorte)}
+.fondo,.velo,.grano{position:absolute;inset:0;pointer-events:none}
+.fondo{background:var(--fondo)}
+.velo{background:var(--velo)}
+.grano,.grano-l{opacity:.26;mix-blend-mode:overlay;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E")}
+.desliza{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;
+  scrollbar-width:thin;scrollbar-color:var(--br) transparent}
+.columna{max-width:440px;margin:0 auto;position:relative}
+
+.vidrio{background:var(--gl);border:1px solid var(--br);
+  -webkit-backdrop-filter:blur(var(--bl)) saturate(165%);backdrop-filter:blur(var(--bl)) saturate(165%);
+  box-shadow:inset 0 1px 0 var(--hi),0 10px 30px -14px var(--sombra)}
+@supports not ((backdrop-filter:blur(2px)) or (-webkit-backdrop-filter:blur(2px))){.vidrio{background:var(--glf)}}
+
+.toca{transition:transform .18s var(--suave),background-color .18s,box-shadow .18s;cursor:pointer}
+.toca:active{transform:scale(.97)}
+
+/* ============ Portada ============ */
+.portada{position:relative;height:clamp(230px,36vh,300px);overflow:hidden;
+  -webkit-mask-image:linear-gradient(#000 58%,transparent 100%);mask-image:linear-gradient(#000 58%,transparent 100%)}
+.portada svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.portada .grano-l{position:absolute;inset:0;opacity:.34}
+.portada::after{content:"";position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,.34),transparent 32%);pointer-events:none}
+
+/* ============ La hoja principal que sube sobre la portada ============ */
+.hoja{position:relative;margin-top:-30px;border-radius:30px 30px 0 0;border-bottom:0;
+  padding:60px 18px calc(28px + env(safe-area-inset-bottom,0px));min-height:60vh}
+.logo{position:absolute;top:-48px;left:18px;width:94px;height:94px;border-radius:50%;
+  display:grid;place-items:center;align-content:center;gap:1px;
+  background:radial-gradient(circle at 32% 26%,var(--teal1),var(--teal2) 72%);
+  border:3px solid var(--glf);
+  box-shadow:0 0 0 1px var(--br),inset 0 1px 0 var(--hi),0 20px 40px -16px rgba(0,0,0,.85)}
+.logo::before{content:"";position:absolute;inset:6px;border-radius:50%;
+  border:1px solid color-mix(in srgb,var(--laton) 55%,transparent)}
+.logo .bp{font-family:var(--dp);font-weight:800;font-size:31px;letter-spacing:-.05em;line-height:1}
+.logo .bp i{font-style:normal;color:var(--ac)}
+.logo .est{font-family:var(--mo);font-size:6.5px;letter-spacing:.24em;color:var(--laton);opacity:.85;margin-left:.24em}
+
+.cab h1{font-family:var(--dp);font-weight:800;font-size:29px;letter-spacing:-.035em;line-height:1.05;margin:0;
+  text-wrap:balance;text-shadow:0 2px 18px rgba(0,0,0,.3)}
+.meta{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;margin-top:8px;font-size:14px;color:var(--tx2)}
+.meta .pun{opacity:.5}
+.abierto{display:inline-flex;align-items:center;gap:7px;color:var(--tx)}
+.abierto i{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px color-mix(in srgb,var(--ok) 22%,transparent)}
+.abierto.cerrado i{background:var(--tx3);box-shadow:none}
+
+.eti{font-family:var(--mo);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--tx2);
+  font-weight:500;margin:26px 0 10px 4px}
+
+/* Tarjeta de lealtad de la página */
+.lealtad{border-radius:24px;padding:16px;position:relative;overflow:hidden;transition:background-color .4s,border-color .4s,color .4s}
+.lealtad::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(85% 120% at 100% 0%,color-mix(in srgb,var(--ac) 30%,transparent),transparent 62%)}
+.lealtad > *{position:relative}
+.le-enc{display:flex;align-items:center;gap:13px}
+.ico-c{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;
+  background:var(--glf);border:1px solid var(--br)}
+.ico-c svg{width:19px;height:19px;stroke:var(--ac);fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.ico-c.ac{width:46px;height:46px;background:color-mix(in srgb,var(--ac) 20%,transparent);border-color:color-mix(in srgb,var(--ac) 55%,transparent)}
+.ico-c.ac svg{width:21px;height:21px}
+.le-num{font-family:var(--dp);font-weight:700;font-size:20px;letter-spacing:-.02em;line-height:1.15}
+.le-num b{font-weight:800}
+.le-sub{font-size:14px;color:var(--tx2);margin-top:1px}
+.puntos{display:flex;align-items:center;gap:8px;margin:16px 0}
+.pt{width:24px;height:24px;border-radius:50%;border:1.5px dashed var(--br);background:rgba(0,0,0,.08);
+  display:grid;place-items:center}
+.pt svg{width:12px;height:12px;stroke:var(--acx);fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:0}
+.pt.on{background:var(--ac);border:1.5px solid var(--ac);box-shadow:0 5px 14px -6px var(--ac)}
+.pt.on svg{opacity:1}
+.pt.nuevo{animation:brinca .5s var(--rebote)}
+.puntos .falta{margin-left:auto;font-family:var(--mo);font-size:11px;letter-spacing:.06em;color:var(--tx2)}
+.lealtad.ganada{background:var(--ac);border-color:var(--ac);color:var(--acx)}
+.lealtad.ganada::before{display:none}
+.lealtad.ganada .le-sub,.lealtad.ganada .falta{color:color-mix(in srgb,var(--acx) 72%,transparent)}
+.lealtad.ganada .ico-c.ac{background:rgba(0,0,0,.14);border-color:transparent}
+.lealtad.ganada .ico-c svg{stroke:var(--acx)}
+.lealtad.ganada .pt.on{background:var(--acx);border-color:var(--acx);box-shadow:none}
+.lealtad.ganada .pt svg{stroke:var(--ac)}
+.lealtad.ganada .btn-ac{background:var(--acx);color:var(--ac);box-shadow:none}
+@keyframes brinca{0%{transform:scale(.3);opacity:0}60%{transform:scale(1.18)}100%{transform:scale(1);opacity:1}}
+
+/* Botones */
+.btn-ac,.btn-vid,.btn-demo{font:inherit;font-weight:600;font-size:15px;width:100%;border-radius:15px;padding:15px 18px;
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;text-decoration:none;white-space:nowrap}
+.btn-ac{border:1px solid var(--ac);background:var(--ac);color:var(--acx);box-shadow:0 14px 32px -14px var(--ac)}
+.btn-ac svg,.btn-vid svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.btn-vid{border:1px solid var(--br);background:var(--gl);color:var(--tx);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:inset 0 1px 0 var(--hi)}
+.btn-demo{background:transparent;border:1px dashed var(--br);color:var(--tx2);font-family:var(--mo);font-weight:500;
+  font-size:11.5px;letter-spacing:.06em;padding:11px 14px;border-radius:100px}
+.btn-link{background:none;border:0;padding:6px 2px;font:inherit;font-size:13.5px;color:var(--tx);cursor:pointer;
+  text-decoration:underline;text-decoration-color:var(--br);text-underline-offset:4px}
+@media (hover:hover){
+  .btn-vid:hover,.renglon:hover{background:var(--glf)}
+  .btn-demo:hover{color:var(--tx);border-color:var(--tx3)}
+}
+
+/* Renglones de acción */
+.renglones{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.renglon{width:100%;display:flex;align-items:center;gap:13px;padding:12px 14px 12px 12px;border-radius:20px;
+  color:var(--tx);font:inherit;text-align:left}
+.renglon .tt{flex:1;min-width:0;display:grid;gap:2px}
+.renglon .t{font-weight:600;font-size:15px;line-height:1.2}
+.renglon .s{font-size:12.5px;color:var(--tx2);line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.renglon .fl{flex:none;width:16px;height:16px;fill:none;stroke:var(--tx3);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+.marca{padding:34px 0 4px;text-align:center;color:var(--tx2);font-size:11px;line-height:1.6}
+.marca .mk{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;margin-bottom:8px;
+  font-family:var(--dp);font-weight:800;font-size:10px;letter-spacing:-.03em;color:var(--tx);opacity:.6;border:1px solid var(--br)}
+
+@media (min-width:520px){
+  .columna{margin-block:28px}
+  .portada{border-radius:30px 30px 0 0}
+  .hoja{border-radius:30px;border-bottom:1px solid var(--br);min-height:0}
+}
+
+/* ============ Hojas modales ============ */
+.cortina{position:fixed;inset:0;z-index:30;background:var(--cortina);opacity:var(--p);pointer-events:none;
+  -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);transition:opacity .45s var(--resorte)}
+.con-hoja .cortina{pointer-events:auto}
+.modal{position:fixed;left:0;right:0;bottom:0;margin-inline:auto;z-index:40;width:min(100%,440px);
+  max-height:calc(100% - 44px - env(safe-area-inset-top,0px));display:flex;flex-direction:column;
+  border-radius:28px 28px 0 0;background:var(--glm);border:1px solid var(--br);border-bottom:0;
+  -webkit-backdrop-filter:blur(30px) saturate(170%);backdrop-filter:blur(30px) saturate(170%);
+  box-shadow:inset 0 1px 0 var(--hi),0 -20px 60px -20px rgba(0,0,0,.7);
+  transform:translateY(calc(100% + 24px));transition:transform .45s var(--resorte);outline:none}
+.modal.arriba{transform:translateY(0)}
+.arrastrando .marco,.arrastrando .cortina,.arrastrando .modal{transition:none!important}
+.arrastrando .modal{user-select:none;-webkit-user-select:none}
+.m-cabeza{flex:none;height:30px;position:relative;touch-action:none;cursor:grab}
+.arrastrando .m-cabeza{cursor:grabbing}
+.asa{position:absolute;top:9px;left:50%;width:38px;height:5px;margin-left:-19px;border-radius:5px;background:var(--tx3)}
+.cerrar{position:absolute;top:12px;right:14px;z-index:2;width:32px;height:32px;border-radius:50%;padding:0;
+  display:grid;place-items:center;border:1px solid var(--br);background:var(--glf);color:var(--tx)}
+.cerrar svg{width:14px;height:14px;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;fill:none}
+.m-cuerpo{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;
+  padding:4px 20px calc(26px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:16px}
+.m-tit{font-family:var(--dp);font-weight:800;font-size:27px;letter-spacing:-.035em;line-height:1.08;margin:0;
+  padding-right:40px;text-wrap:balance}
+.m-sub{margin:-8px 0 0;font-size:14.5px;line-height:1.5;color:var(--tx2);text-wrap:pretty}
+.nota{margin:0;font-size:12.5px;line-height:1.5;color:var(--tx2);text-wrap:pretty}
+.kl{font-family:var(--mo);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--tx2)}
+.caja{border-radius:18px;padding:4px 16px}
+.pila{display:flex;flex-direction:column;gap:16px}
+
+/* Tarjeta grande */
+.tarj-envol{position:relative}
+.tarj{border-radius:24px;padding:20px 17px;position:relative;overflow:hidden;transition:background-color .45s,border-color .45s,color .45s}
+.tarj::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(80% 130% at 100% 0%,color-mix(in srgb,var(--ac) 30%,transparent),transparent 62%)}
+.tarj .enc{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:18px;position:relative}
+.lt{font-family:var(--dp);font-weight:700;font-size:21px;letter-spacing:-.02em;margin-top:3px}
+.cuenta{font-family:var(--mo);font-size:12px;font-weight:600;padding:6px 12px;border-radius:100px;
+  border:1px solid var(--br);background:var(--gl);white-space:nowrap;font-variant-numeric:tabular-nums}
+.rej{display:grid;grid-template-columns:repeat(6,1fr);gap:9px;position:relative}
+.sello{aspect-ratio:1;max-width:100%;border-radius:50%;border:1.5px dashed var(--br);display:grid;place-items:center;
+  font-family:var(--mo);font-size:12px;color:var(--tx2);background:rgba(0,0,0,.06)}
+.sello.on{background:var(--ac);border:1.5px solid var(--ac);color:var(--acx);font-weight:700;box-shadow:0 6px 16px -8px var(--ac)}
+.sello.nuevo{animation:brinca .5s var(--rebote)}
+.tarj .pie{position:relative;margin-top:16px;font-size:14px;color:var(--tx2);line-height:1.45}
+.tarj .pie b{color:var(--tx);font-weight:600}
+.tarj.ganada{background:var(--ac);border-color:var(--ac);color:var(--acx)}
+.tarj.ganada::before{display:none}
+.tarj.ganada .kl,.tarj.ganada .pie{color:color-mix(in srgb,var(--acx) 70%,transparent)}
+.tarj.ganada .pie b{color:var(--acx)}
+.tarj.ganada .cuenta{background:rgba(0,0,0,.12);border-color:transparent}
+.tarj.ganada .sello.on{background:var(--acx);border-color:var(--acx);color:var(--ac);box-shadow:none}
+.tarj.gana{animation:gana .8s var(--rebote)}
+@keyframes gana{0%{transform:scale(.96);box-shadow:0 0 0 0 color-mix(in srgb,var(--ac) 70%,transparent)}
+  45%{transform:scale(1.025)}100%{transform:scale(1);box-shadow:0 0 0 22px transparent}}
+.chispa{position:absolute;left:50%;top:48%;width:7px;height:7px;border-radius:2px;background:var(--c);pointer-events:none;
+  animation:chispa 1s var(--suave) forwards}
+@keyframes chispa{from{transform:translate(-50%,-50%) rotate(0);opacity:1}
+  to{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) rotate(var(--r));opacity:0}}
+
+.nfc{display:flex;align-items:center;gap:13px;border-radius:18px;padding:13px 14px}
+.nfc p{margin:0;font-size:13.5px;line-height:1.45}
+.fila-btn{display:grid;gap:10px}
+.wallet{background:#000;color:#fff;border:1px solid rgba(255,255,255,.28);box-shadow:none}
+.mov{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--br)}
+.mov:last-child{border-bottom:0}
+.mov .d{flex:1;min-width:0}
+.mov .t{font-weight:600;font-size:13.5px}
+.mov .f{font-family:var(--mo);font-size:11px;color:var(--tx2);margin-top:2px}
+.mov .v{font-family:var(--mo);font-weight:600;color:var(--ac)}
+.mov.nuevo{animation:entra .45s var(--suave)}
+.pie-hoja{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px}
+@keyframes entra{from{transform:translateY(-8px);opacity:0}to{transform:none;opacity:1}}
+
+/* Reseña */
+.estrellas{display:flex;justify-content:center;gap:4px}
+.estrella{background:none;border:0;padding:4px;cursor:pointer;color:var(--apagado);border-radius:12px;
+  transition:transform .16s var(--rebote),color .16s}
+.estrella svg{width:44px;height:44px;display:block;fill:currentColor;stroke:var(--br);stroke-width:1;stroke-linejoin:round;
+  filter:drop-shadow(0 3px 10px rgba(0,0,0,.25))}
+.estrella.on{color:var(--ac)}
+.estrella.on svg{stroke:var(--ac)}
+.estrella.pop{animation:brinca .45s var(--rebote) both}
+@media (hover:hover){.estrella:hover{transform:scale(1.14) translateY(-2px)}}
+.leyenda{text-align:center;font-family:var(--mo);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--tx2);margin:-6px 0 0}
+.invita{border-radius:20px;padding:18px 16px;display:grid;gap:12px;animation:entra .4s var(--suave)}
+.invita h3{font-family:var(--dp);font-weight:700;font-size:20px;letter-spacing:-.02em;margin:0;text-wrap:balance}
+.invita p{margin:0;font-size:14px;color:var(--tx2);line-height:1.5}
+
+/* Servicios */
+.serv{display:flex;align-items:baseline;gap:12px;padding:14px 0;border-bottom:1px solid var(--br)}
+.serv:last-child{border-bottom:0}
+.serv .d{flex:1;min-width:0}
+.serv .n{font-weight:600;font-size:15px}
+.serv .x{font-size:12.5px;color:var(--tx2);margin-top:2px;line-height:1.35}
+.serv .pr{font-family:var(--mo);font-weight:600;font-size:16px;font-variant-numeric:tabular-nums}
+
+/* Reservar */
+.opciones{display:flex;flex-wrap:wrap;gap:8px}
+.opciones label{position:relative;padding:10px 15px;border-radius:100px;border:1px solid var(--br);background:var(--gl);
+  font-size:14px;color:var(--tx);cursor:pointer;font-variant-numeric:tabular-nums;
+  transition:background-color .18s,border-color .18s,color .18s,transform .18s var(--suave)}
+.opciones label:active{transform:scale(.96)}
+.opciones input{position:absolute;opacity:0;width:1px;height:1px;margin:0}
+.opciones label:has(input:checked){background:var(--ac);border-color:var(--ac);color:var(--acx);font-weight:600}
+.opciones label:has(input:focus-visible){outline:2px solid var(--ac);outline-offset:2px}
+.grupo{display:grid;gap:9px}
+.grupo .kl{margin-left:2px}
+.burbuja{align-self:flex-end;max-width:88%;background:var(--wa);color:var(--tx);border-radius:16px 16px 4px 16px;
+  padding:10px 12px 8px;font-size:14.5px;line-height:1.4;box-shadow:0 8px 20px -12px rgba(0,0,0,.6)}
+.burbuja .h{display:block;text-align:right;font-family:var(--mo);font-size:10px;color:var(--tx2);margin-top:3px}
+.exito{display:grid;justify-items:center;text-align:center;gap:10px;padding:10px 0 4px;animation:entra .4s var(--suave)}
+.exito h3{font-family:var(--dp);font-weight:800;font-size:24px;letter-spacing:-.03em;margin:4px 0 0}
+.exito p{margin:0;font-size:14px;color:var(--tx2);line-height:1.5;max-width:32ch}
+.palomita{width:64px;height:64px}
+.palomita circle{fill:color-mix(in srgb,var(--ac) 16%,transparent);stroke:var(--ac);stroke-width:2.5;
+  stroke-dasharray:151;stroke-dashoffset:151;animation:traza .6s var(--suave) forwards}
+.palomita path{fill:none;stroke:var(--ac);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:36;stroke-dashoffset:36;animation:traza .35s .45s var(--suave) forwards}
+@keyframes traza{to{stroke-dashoffset:0}}
+
+/* Wi-Fi */
+.red{display:flex;align-items:center;gap:12px;border-radius:18px;padding:12px 14px}
+.red .v{font-family:var(--mo);font-size:14px;font-weight:500;overflow-wrap:anywhere;min-width:0}
+.codigo{font-family:var(--mo);font-size:27px;letter-spacing:.2em;font-weight:600;text-align:center;
+  padding:18px 12px;border-radius:16px;background:var(--sol);border:1px solid var(--br);
+  user-select:all;-webkit-user-select:all;overflow-wrap:anywhere}
+
+/* Opinión */
+.area{width:100%;min-width:0;min-height:130px;background:var(--gl);border:1px solid var(--br);color:var(--tx);
+  border-radius:18px;padding:14px 15px;font:inherit;font-size:16px;line-height:1.5;resize:vertical;
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:inset 0 1px 0 var(--hi)}
+.area::placeholder{color:var(--tx3)}
+.area:focus{outline:none;border-color:var(--ac);box-shadow:inset 0 1px 0 var(--hi),0 0 0 3px color-mix(in srgb,var(--ac) 30%,transparent)}
+.area.error{border-color:var(--ac);animation:tiembla .35s}
+@keyframes tiembla{25%{transform:translateX(-5px)}50%{transform:translateX(4px)}75%{transform:translateX(-2px)}}
+.aviso-e{margin:-8px 0 0 4px;font-size:12.5px;color:var(--tx)}
+.aviso-e::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--ac);margin-right:7px;vertical-align:middle}
+.fila-foto{display:flex;align-items:center;gap:13px;padding:11px 14px 11px 11px;border-radius:18px}
+.fila-foto:focus-within{outline:2px solid var(--ac);outline-offset:2px}
+.fila-foto .tt{flex:1;display:grid;gap:1px}
+.fila-foto .t{font-weight:600;font-size:15px}
+.fila-foto .s{font-size:12.5px;color:var(--tx2)}
+.adjunto{display:flex;align-items:center;gap:12px;animation:entra .35s var(--suave)}
+.adjunto img{width:56px;height:56px;border-radius:14px;object-fit:cover;border:1px solid var(--br);max-width:100%}
+.adjunto span{flex:1;min-width:0;font-size:13px;color:var(--tx2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.adjunto .btn-link{flex:none}
+
+/* Cómo llegar */
+.mapa{border-radius:20px;overflow:hidden;padding:0;line-height:0}
+.mapa svg{width:100%;height:auto;display:block;max-width:100%}
+.pulso{transform-box:fill-box;transform-origin:center;animation:pulso 2.2s ease-out infinite}
+@keyframes pulso{from{transform:scale(.4);opacity:.7}to{transform:scale(2.4);opacity:0}}
+.dir{display:flex;gap:12px;align-items:center}
+.dir .t{font-weight:600;font-size:15.5px}
+.dir .s{font-size:12.5px;color:var(--tx2);margin-top:2px}
+.horario{list-style:none;margin:0;padding:6px 0}
+.horario li{display:flex;align-items:center;gap:10px;padding:8px 14px;font-size:14px;color:var(--tx2);border-radius:12px}
+.horario li .h{margin-left:auto;font-family:var(--mo);font-size:13px;font-variant-numeric:tabular-nums}
+.horario li.hoy{background:color-mix(in srgb,var(--ac) 18%,transparent);color:var(--tx);font-weight:600}
+.horario li.hoy .tag{font-family:var(--mo);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;
+  padding:3px 7px;border-radius:100px;background:var(--ac);color:var(--acx);font-weight:600}
+
+/* Instagram */
+.perfil{display:flex;align-items:center;gap:16px}
+.perfil .av{position:relative;flex:none;width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 32% 26%,var(--teal1),var(--teal2) 72%);
+  box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--ac);font-family:var(--dp);font-weight:800;font-size:23px;letter-spacing:-.05em}
+.perfil .av i{font-style:normal;color:var(--ac)}
+.cifras{flex:1;display:grid;grid-template-columns:repeat(3,1fr);text-align:center;gap:4px}
+.cifras b{display:block;font-family:var(--mo);font-weight:600;font-size:16px;font-variant-numeric:tabular-nums}
+.cifras span{font-size:11.5px;color:var(--tx2)}
+.bio{margin:0;font-size:14px;line-height:1.5}
+.bio b{display:block;font-weight:600}
+.bio span{color:var(--tx2)}
+.fotos{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;border-radius:16px;overflow:hidden}
+.fotos span{aspect-ratio:1;max-width:100%;position:relative}
+.fotos span::after{content:"";position:absolute;inset:0;opacity:.3;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E")}
+.f1{background:radial-gradient(60% 50% at 40% 30%,rgba(255,196,122,.85),transparent 70%),linear-gradient(160deg,#15464A,#07100F)}
+.f2{background:repeating-linear-gradient(-38deg,var(--ac) 0 10px,#F4EEE6 10px 18px,#1E6E5A 18px 24px,#F4EEE6 24px 30px)}
+.f3{background:radial-gradient(40% 40% at 70% 65%,rgba(233,184,114,.55),transparent 70%),linear-gradient(200deg,#23150E,#0A0706)}
+.f4{background:linear-gradient(135deg,#F3C98A,#9C6A34 45%,#E2AE67 70%,#6E4722)}
+.f5{background:radial-gradient(70% 60% at 30% 80%,rgba(30,110,90,.9),transparent 70%),linear-gradient(20deg,#0C2226,#124A50)}
+.f6{background:radial-gradient(50% 45% at 50% 40%,var(--ac),transparent 72%),linear-gradient(180deg,#2A0F0B,#0E0605)}
+
+/* Toast */
+.toast{position:fixed;z-index:60;left:0;right:0;margin-inline:auto;top:calc(env(safe-area-inset-top,0px) + 12px);
+  width:max-content;max-width:calc(100% - 32px);padding:12px 18px;border-radius:100px;font-size:14px;font-weight:500;
+  text-align:center;background:var(--glm);border:1px solid var(--br);color:var(--tx);
+  -webkit-backdrop-filter:blur(24px) saturate(170%);backdrop-filter:blur(24px) saturate(170%);
+  box-shadow:inset 0 1px 0 var(--hi),0 14px 34px -12px rgba(0,0,0,.7);
+  transform:translateY(calc(-100% - 30px));opacity:0;transition:transform .45s var(--resorte),opacity .3s;pointer-events:none}
+.toast.ve{transform:none;opacity:1}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .palomita circle,.palomita path{stroke-dashoffset:0}
+}
+</style>
+
+<div class="marco" id="marco">
+  <div class="fondo"></div><div class="velo"></div><div class="grano"></div>
+  <div class="desliza" id="desliza">
+    <main class="columna">
+
+      <div class="portada" aria-hidden="true">
+        <svg id="escena" viewBox="0 0 400 280" preserveAspectRatio="xMidYMid slice" focusable="false">
+          <defs>
+            <linearGradient id="gPared" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#15464A"/><stop offset=".55" stop-color="#0D2C2F"/><stop offset="1" stop-color="#081818"/>
+            </linearGradient>
+            <radialGradient id="gLuz" cx=".5" cy=".5" r=".5">
+              <stop offset="0" stop-color="#FFB86B" stop-opacity=".5"/><stop offset=".45" stop-color="#E8894A" stop-opacity=".16"/><stop offset="1" stop-color="#E8894A" stop-opacity="0"/>
+            </radialGradient>
+            <linearGradient id="gEspejo" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#2F706D"/><stop offset=".5" stop-color="#173F42"/><stop offset="1" stop-color="#0B2124"/>
+            </linearGradient>
+            <linearGradient id="gLaton" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#F3C98A"/><stop offset=".45" stop-color="#9C6A34"/><stop offset=".7" stop-color="#E2AE67"/><stop offset="1" stop-color="#6E4722"/>
+            </linearGradient>
+            <linearGradient id="gCil" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#000" stop-opacity=".6"/><stop offset=".3" stop-color="#fff" stop-opacity="0"/>
+              <stop offset=".42" stop-color="#fff" stop-opacity=".5"/><stop offset=".56" stop-color="#fff" stop-opacity="0"/>
+              <stop offset="1" stop-color="#000" stop-opacity=".65"/>
+            </linearGradient>
+            <pattern id="pFranjas" width="18" height="18" patternUnits="userSpaceOnUse" patternTransform="rotate(-38)">
+              <rect width="18" height="18" fill="#F4EEE6"/>
+              <rect width="18" height="6" fill="#D9503C"/>
+              <rect y="9" width="18" height="4" fill="#1E6E5A"/>
+              <animateTransform attributeName="patternTransform" type="translate" additive="sum" from="0 0" to="0 18" dur="2.6s" repeatCount="indefinite"/>
+            </pattern>
+            <pattern id="pListones" width="16" height="10" patternUnits="userSpaceOnUse">
+              <rect width="16" height="10" fill="#0A2224"/><rect width="1" height="10" fill="#000" opacity=".4"/><rect x="1" width="1" height="10" fill="#fff" opacity=".05"/>
+            </pattern>
+            <filter id="fDesen" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="7"/></filter>
+            <filter id="fSuave" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="1.5"/></filter>
+            <filter id="fBrillo" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="3.5"/></filter>
+            <clipPath id="cEspejo"><path d="M191 224V128a64 64 0 0 1 128 0v96z"/></clipPath>
+            <radialGradient id="gVineta" cx=".5" cy=".42" r=".75">
+              <stop offset=".5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".62"/>
+            </radialGradient>
+          </defs>
+
+          <!-- pared y lambrín -->
+          <rect width="400" height="280" fill="url(#gPared)"/>
+          <rect y="186" width="400" height="72" fill="url(#pListones)"/>
+          <rect y="183" width="400" height="3" fill="url(#gLaton)" opacity=".5"/>
+          <rect y="258" width="400" height="22" fill="#050D0D"/>
+
+          <!-- luz cálida de las lámparas -->
+          <circle cx="132" cy="70" r="120" fill="url(#gLuz)"/>
+          <circle cx="255" cy="60" r="130" fill="url(#gLuz)"/>
+          <path d="M118 36L88 170H176L146 36Z" fill="#FFC27A" opacity=".07" filter="url(#fDesen)"/>
+          <path d="M241 26L200 160H310L269 26Z" fill="#FFC27A" opacity=".06" filter="url(#fDesen)"/>
+
+          <!-- diploma enmarcado -->
+          <rect x="112" y="104" width="40" height="52" rx="2" fill="#0F2D30" stroke="url(#gLaton)" stroke-width="3"/>
+          <rect x="120" y="114" width="24" height="3" fill="#F3C98A" opacity=".4"/>
+          <rect x="120" y="123" width="24" height="1.5" fill="#fff" opacity=".18"/>
+          <rect x="120" y="128" width="20" height="1.5" fill="#fff" opacity=".18"/>
+          <rect x="120" y="133" width="22" height="1.5" fill="#fff" opacity=".18"/>
+          <circle cx="132" cy="146" r="4" fill="#D9503C" opacity=".85"/>
+
+          <!-- espejo de arco con marco de latón -->
+          <path d="M185 228V128a70 70 0 0 1 140 0v100z" fill="url(#gLaton)"/>
+          <path d="M191 224V128a64 64 0 0 1 128 0v96z" fill="url(#gEspejo)"/>
+          <g clip-path="url(#cEspejo)">
+            <circle cx="232" cy="118" r="46" fill="url(#gLuz)"/>
+            <rect x="296" y="120" width="9" height="62" fill="url(#pFranjas)" opacity=".32" filter="url(#fSuave)"/>
+            <rect x="229" y="150" width="54" height="80" rx="14" fill="#061314" opacity=".75" filter="url(#fSuave)"/>
+            <rect x="243" y="136" width="26" height="12" rx="6" fill="#061314" opacity=".7" filter="url(#fSuave)"/>
+            <circle cx="236" cy="96" r="4" fill="#FFE2B0" opacity=".55" filter="url(#fBrillo)"/>
+            <polygon points="191,150 244,64 266,64 191,192" fill="#fff" opacity=".07"/>
+            <polygon points="191,204 276,64 282,64 191,214" fill="#fff" opacity=".05"/>
+          </g>
+          <path d="M191 224V128a64 64 0 0 1 128 0v96z" fill="none" stroke="#000" stroke-opacity=".35" stroke-width="2"/>
+
+          <!-- tocador y frascos -->
+          <rect x="150" y="228" width="210" height="7" rx="2" fill="#3B2618"/>
+          <rect x="150" y="228" width="210" height="1.5" fill="#F3C98A" opacity=".35"/>
+          <rect x="156" y="235" width="198" height="23" fill="url(#pListones)"/>
+          <rect x="196" y="204" width="11" height="24" rx="2.5" fill="#B8672E"/>
+          <rect x="199.5" y="198" width="4" height="7" fill="#2A1A10"/>
+          <rect x="198" y="207" width="1.6" height="16" fill="#fff" opacity=".35"/>
+          <rect x="211" y="211" width="8" height="17" rx="2" fill="#2F8A7C"/>
+          <rect x="212" y="207" width="6" height="4" fill="#E9E1D4"/>
+          <rect x="240" y="225" width="30" height="3" rx="1" fill="#111" opacity=".85"/>
+          <rect x="296" y="202" width="13" height="26" rx="3" fill="#E6D3B1" opacity=".92"/>
+          <rect x="299" y="196" width="7" height="6" fill="#1C1C1C"/>
+          <rect x="298" y="205" width="1.8" height="18" fill="#fff" opacity=".4"/>
+          <rect x="313" y="209" width="9" height="19" rx="2" fill="#D9503C"/>
+          <rect x="314.5" y="205" width="6" height="4" fill="#F4EEE6"/>
+
+          <!-- poste de barbero -->
+          <rect x="50" y="70" width="46" height="130" rx="22" fill="#D9503C" opacity=".22" filter="url(#fDesen)"/>
+          <circle cx="73" cy="58" r="7" fill="url(#gLaton)"/>
+          <rect x="60" y="64" width="26" height="10" rx="3" fill="url(#gLaton)"/>
+          <rect x="63" y="74" width="20" height="116" fill="url(#pFranjas)"/>
+          <rect x="63" y="74" width="20" height="116" fill="url(#gCil)"/>
+          <rect x="63" y="74" width="20" height="116" fill="none" stroke="#fff" stroke-opacity=".15"/>
+          <rect x="60" y="190" width="26" height="10" rx="3" fill="url(#gLaton)"/>
+          <path d="M68 200h10l-2 7h-6z" fill="#6E4722"/>
+
+          <!-- lámparas colgantes -->
+          <line x1="132" y1="0" x2="132" y2="24" stroke="#050505" stroke-width="1.2"/>
+          <path d="M118 36Q132 16 146 36Z" fill="#17110D"/>
+          <line x1="118" y1="36" x2="146" y2="36" stroke="url(#gLaton)" stroke-width="1.6"/>
+          <circle cx="132" cy="38" r="12" fill="#FFD9A0" opacity=".75" filter="url(#fBrillo)"/>
+          <circle cx="132" cy="37.5" r="3.2" fill="#FFF4DE"/>
+          <line x1="255" y1="0" x2="255" y2="14" stroke="#050505" stroke-width="1.2"/>
+          <path d="M241 26Q255 6 269 26Z" fill="#17110D"/>
+          <line x1="241" y1="26" x2="269" y2="26" stroke="url(#gLaton)" stroke-width="1.6"/>
+          <circle cx="255" cy="28" r="12" fill="#FFD9A0" opacity=".75" filter="url(#fBrillo)"/>
+          <circle cx="255" cy="27.5" r="3.2" fill="#FFF4DE"/>
+
+          <!-- planta -->
+          <ellipse cx="358" cy="200" rx="6" ry="22" transform="rotate(-25 358 200)" fill="#1F5A48"/>
+          <ellipse cx="372" cy="196" rx="6" ry="26" transform="rotate(15 372 196)" fill="#2B7560"/>
+          <ellipse cx="365" cy="190" rx="5" ry="28" transform="rotate(-4 365 190)" fill="#236552"/>
+          <ellipse cx="381" cy="210" rx="5" ry="18" transform="rotate(42 381 210)" fill="#1B4E40"/>
+          <ellipse cx="350" cy="213" rx="5" ry="16" transform="rotate(-52 350 213)" fill="#1B4E40"/>
+          <rect x="350" y="224" width="32" height="6" rx="2" fill="#2A1F18"/>
+          <path d="M352 230h28l-4 28h-20z" fill="#1B1511"/>
+
+          <!-- bokeh en primer plano, fuera de foco -->
+          <circle cx="36" cy="36" r="16" fill="#FFB86B" opacity=".22" filter="url(#fDesen)"/>
+          <circle cx="362" cy="70" r="10" fill="#FFD9A0" opacity=".28" filter="url(#fDesen)"/>
+          <circle cx="332" cy="16" r="22" fill="#1E6E5A" opacity=".4" filter="url(#fDesen)"/>
+          <circle cx="20" cy="214" r="26" fill="#D9503C" opacity=".14" filter="url(#fDesen)"/>
+          <circle cx="394" cy="150" r="14" fill="#FFB86B" opacity=".16" filter="url(#fDesen)"/>
+
+          <rect width="400" height="280" fill="url(#gVineta)"/>
+        </svg>
+        <div class="grano-l"></div>
+      </div>
+
+      <div class="hoja vidrio">
+        <div class="logo" role="img" aria-label="Logotipo de Barbería Pruebas"><span class="bp">B<i>P</i></span><span class="est">EST·2019</span></div>
+
+        <header class="cab">
+          <h1>Barbería Pruebas</h1>
+          <div class="meta"><span>Barbería</span><span class="pun" aria-hidden="true">·</span>
+            <span class="abierto" id="estado"><i></i><span id="estado-t">Abierto hoy hasta las 8:00 pm</span></span></div>
+        </header>
+
+        <h2 class="eti" id="t-tarjeta">Tu tarjeta</h2>
+        <section class="lealtad vidrio" id="lealtad" aria-labelledby="t-tarjeta">
+          <div class="le-enc">
+            <span class="ico-c ac"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.1a4.3 4.3 0 0 1 7.5 2.7C19.5 15.4 12 20 12 20z"/></svg></span>
+            <div>
+              <div class="le-num"><b id="le-n">2</b> / 6 sellos</div>
+              <div class="le-sub" id="le-sub">para un corte gratis</div>
+            </div>
+          </div>
+          <div class="puntos" id="puntos" aria-hidden="true"></div>
+          <button type="button" class="btn-ac toca" data-abre="tarjeta" aria-haspopup="dialog">Ver mi tarjeta</button>
+        </section>
+
+        <h2 class="eti" id="t-local">En el local</h2>
+        <ul class="renglones" aria-labelledby="t-local">
+          <li><button type="button" class="renglon vidrio toca" data-abre="resena" aria-haspopup="dialog">
+            <span class="ico-c"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.9 6.3.7-4.7 4.4 1.3 6.3L12 17.1 6.4 20.3l1.3-6.3L3 9.6l6.3-.7z"/></svg></span>
+            <span class="tt"><span class="t">Dejar reseña en Google</span><span class="s">Cuéntales a otros cómo te fue</span></span>
+            <svg class="fl" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button></li>
+          <li><button type="button" class="renglon vidrio toca" data-abre="servicios" aria-haspopup="dialog">
+            <span class="ico-c"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12a1 1 0 0 1 1 1v16l-7-3-7 3V4a1 1 0 0 1 1-1z"/><path d="M9 8h6M9 12h4"/></svg></span>
+            <span class="tt"><span class="t">Ver servicios y precios</span><span class="s">Cortes desde $150</span></span>
+            <svg class="fl" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button></li>
+          <li><button type="button" class="renglon vidrio toca" data-abre="reservar" aria-haspopup="dialog">
+            <span class="ico-c"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 0 1-13.3 7.9L3 21l1.2-4.5A9 9 0 1 1 21 12z"/><path d="M8.5 9.5c0 3.5 2.5 6 6 6"/></svg></span>
+            <span class="tt"><span class="t">Reservar por WhatsApp</span><span class="s">Aparta tu lugar en un minuto</span></span>
+            <svg class="fl" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button></li>
+          <li><button type="button" class="renglon vidrio toca" data-abre="wifi" aria-haspopup="dialog">
+            <span class="ico-c"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 9a14 14 0 0 1 19 0"/><path d="M5.5 12.5a9.5 9.5 0 0 1 13 0"/><path d="M8.7 15.9a5 5 0 0 1 6.6 0"/><circle cx="12" cy="19.3" r=".9"/></svg></span>
+            <span class="tt"><span class="t">Conectar al Wi‑Fi</span><span class="s">Sin preguntarle la clave a nadie</span></span>
+            <svg class="fl" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button></li>
+          <li><button type="button" class="renglon vidrio toca" data-abre="opinion" aria-haspopup="dialog">
+            <span class="ico-c"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 0 1-11.6 7.1L4 20l1-4.4A8 8 0 1 1 20 12z"/><path d="M9 11h6M9 14h3.5"/></svg></span>
+            <span class="tt"><span class="t">Opinión anónima</span><span class="s">Solo la lee el dueño</span></span>
+            <svg class="fl" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button></li>
+          <li><button type="button" class="renglon vidrio toca" data-abre="llegar" aria-haspopup="dialog">
+            <span class="ico-c"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg></span>
+            <span class="tt"><span class="t">Cómo llegar</span><span class="s">Av. Juárez 128, Centro</span></span>
+            <svg class="fl" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button></li>
+          <li><button type="button" class="renglon vidrio toca" data-abre="instagram" aria-haspopup="dialog">
+            <span class="ico-c"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.4" cy="6.6" r=".8"/></svg></span>
+            <span class="tt"><span class="t">Síguenos en Instagram</span><span class="s">@barberiapruebas</span></span>
+            <svg class="fl" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button></li>
+        </ul>
+
+        <footer class="marca"><span class="mk" aria-hidden="true">BP</span><br>Tarjeta digital de Barbería Pruebas</footer>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div class="cortina" id="cortina"></div>
+
+<!-- ============ Hoja: Mi tarjeta ============ -->
+<section class="modal" id="m-tarjeta" role="dialog" aria-modal="true" aria-labelledby="mt-tarjeta" tabindex="-1" hidden>
+  <div class="m-cabeza"><span class="asa"></span></div>
+  <button type="button" class="cerrar toca" data-cierra aria-label="Cerrar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <div class="m-cuerpo">
+    <h2 class="m-tit" id="mt-tarjeta">Mi tarjeta</h2>
+    <div class="tarj-envol" id="tarj-envol">
+      <div class="tarj vidrio" id="tarj">
+        <div class="enc">
+          <div><div class="kl">Barbería Pruebas</div><div class="lt">Corte gratis</div></div>
+          <span class="cuenta" id="cuenta">2 / 6</span>
+        </div>
+        <div class="rej" id="rej"></div>
+        <p class="pie" id="tarj-pie" aria-live="polite"></p>
+      </div>
+    </div>
+    <div class="nfc vidrio">
+      <span class="ico-c"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3" width="10" height="18" rx="2.5"/><path d="M7.5 18h2"/><path d="M16.5 9a4 4 0 0 1 0 6"/><path d="M19.3 6.5a8 8 0 0 1 0 11"/></svg></span>
+      <p>Acerca tu celular a la placa del mostrador para que te sellen.</p>
+    </div>
+    <div class="fila-btn">
+      <button type="button" class="btn-ac wallet toca" data-toast="Esto agregaría tu tarjeta a Wallet">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="15" rx="3"/><path d="M3 10h18"/><path d="M16 14.5h2"/></svg>Agregar a Wallet</button>
+      <button type="button" class="btn-demo toca" id="demo-toque">Simular un toque (demo)</button>
+    </div>
+    <div>
+      <h3 class="eti" style="margin-top:4px">Tus visitas</h3>
+      <div class="caja vidrio" id="hist"></div>
+    </div>
+    <div class="pie-hoja">
+      <button type="button" class="btn-link" data-toast="En el mostrador te dan un código para pasar tu tarjeta">¿Cambiaste de celular?</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Hoja: Reseña ============ -->
+<section class="modal" id="m-resena" role="dialog" aria-modal="true" aria-labelledby="mt-resena" tabindex="-1" hidden>
+  <div class="m-cabeza"><span class="asa"></span></div>
+  <button type="button" class="cerrar toca" data-cierra aria-label="Cerrar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <div class="m-cuerpo">
+    <h2 class="m-tit" id="mt-resena">¿Cómo te fue hoy?</h2>
+    <p class="m-sub">Toca una estrella.</p>
+    <div class="estrellas" id="estrellas" role="group" aria-label="Calificación de 1 a 5 estrellas"></div>
+    <p class="leyenda" id="leyenda" aria-live="polite">&nbsp;</p>
+    <div class="invita vidrio" id="invita" hidden>
+      <h3>¿Nos ayudas contándolo en Google?</h3>
+      <p>A otros clientes les sirve saber cómo es venir aquí. Te toma un minuto.</p>
+      <button type="button" class="btn-ac toca" data-toast="Esto abriría Google">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.9 6.3.7-4.7 4.4 1.3 6.3L12 17.1 6.4 20.3l1.3-6.3L3 9.6l6.3-.7z"/></svg>Abrir Google</button>
+    </div>
+    <p class="nota">Esta invitación es la misma para todos. Reseñar no da sellos ni premios.</p>
+  </div>
+</section>
+
+<!-- ============ Hoja: Servicios ============ -->
+<section class="modal" id="m-servicios" role="dialog" aria-modal="true" aria-labelledby="mt-servicios" tabindex="-1" hidden>
+  <div class="m-cabeza"><span class="asa"></span></div>
+  <button type="button" class="cerrar toca" data-cierra aria-label="Cerrar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <div class="m-cuerpo">
+    <h2 class="m-tit" id="mt-servicios">Servicios y precios</h2>
+    <p class="m-sub">Pagas en el mostrador, en efectivo o con tarjeta.</p>
+    <div class="caja vidrio">
+      <div class="serv"><div class="d"><div class="n">Corte clásico</div><div class="x">Tijera y máquina · 40 min</div></div><span class="pr">$180</span></div>
+      <div class="serv"><div class="d"><div class="n">Corte + barba</div><div class="x">El completo, con toalla caliente · 60 min</div></div><span class="pr">$260</span></div>
+      <div class="serv"><div class="d"><div class="n">Barba</div><div class="x">Perfilado con navaja · 25 min</div></div><span class="pr">$120</span></div>
+      <div class="serv"><div class="d"><div class="n">Diseño / fade</div><div class="x">Degradado a piel o con línea · 45 min</div></div><span class="pr">$220</span></div>
+      <div class="serv"><div class="d"><div class="n">Corte niño</div><div class="x">Hasta 12 años · 30 min</div></div><span class="pr">$150</span></div>
+    </div>
+    <p class="nota">Precios en pesos mexicanos, con IVA incluido.</p>
+    <button type="button" class="btn-vid toca" data-abre="reservar">Reservar un lugar</button>
+  </div>
+</section>
+
+<!-- ============ Hoja: Reservar ============ -->
+<section class="modal" id="m-reservar" role="dialog" aria-modal="true" aria-labelledby="mt-reservar" tabindex="-1" hidden>
+  <div class="m-cabeza"><span class="asa"></span></div>
+  <button type="button" class="cerrar toca" data-cierra aria-label="Cerrar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <div class="m-cuerpo">
+    <h2 class="m-tit" id="mt-reservar">Reservar por WhatsApp</h2>
+    <form id="f-reserva" class="pila">
+      <p class="m-sub">Elige cuándo y te armamos el mensaje.</p>
+      <fieldset class="grupo" style="border:0;margin:0;padding:0">
+        <legend class="kl" style="margin-bottom:9px">Día</legend>
+        <div class="opciones">
+          <label><input type="radio" name="dia" id="dia-hoy" value="hoy" checked>Hoy</label>
+          <label><input type="radio" name="dia" id="dia-man" value="mañana">Mañana</label>
+          <label><input type="radio" name="dia" id="dia-sab" value="el sábado">Sáb</label>
+        </div>
+      </fieldset>
+      <fieldset class="grupo" style="border:0;margin:0;padding:0">
+        <legend class="kl" style="margin-bottom:9px">Hora</legend>
+        <div class="opciones">
+          <label><input type="radio" name="hora" id="h-1100" value="11:00">11:00</label>
+          <label><input type="radio" name="hora" id="h-1230" value="12:30">12:30</label>
+          <label><input type="radio" name="hora" id="h-1600" value="16:00" checked>16:00</label>
+          <label><input type="radio" name="hora" id="h-1830" value="18:30">18:30</label>
+        </div>
+      </fieldset>
+      <div class="grupo">
+        <span class="kl">Tu mensaje</span>
+        <div class="burbuja" id="burbuja"><span id="burbuja-t"></span><span class="h">ahora</span></div>
+      </div>
+      <button type="submit" class="btn-ac toca">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 0 1-13.3 7.9L3 21l1.2-4.5A9 9 0 1 1 21 12z"/><path d="M8.5 9.5c0 3.5 2.5 6 6 6"/></svg>Enviar por WhatsApp</button>
+    </form>
+    <div class="exito" id="r-exito" hidden>
+      <svg class="palomita" viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24"/><path d="M15 27l7 7 15-16"/></svg>
+      <h3>Mensaje listo</h3>
+      <p id="r-exito-t">Aquí se abriría WhatsApp con tu mensaje escrito. Mándalo y el barbero te confirma el horario.</p>
+      <button type="button" class="btn-vid toca" id="r-otra" style="margin-top:6px">Cambiar día u hora</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Hoja: Wi-Fi ============ -->
+<section class="modal" id="m-wifi" role="dialog" aria-modal="true" aria-labelledby="mt-wifi" tabindex="-1" hidden>
+  <div class="m-cabeza"><span class="asa"></span></div>
+  <button type="button" class="cerrar toca" data-cierra aria-label="Cerrar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <div class="m-cuerpo">
+    <h2 class="m-tit" id="mt-wifi">Conectar al Wi‑Fi</h2>
+    <p class="m-sub">Es para clientes. Conéctate mientras esperas tu turno.</p>
+    <div class="grupo">
+      <span class="kl">Red</span>
+      <div class="red vidrio">
+        <span class="ico-c"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 9a14 14 0 0 1 19 0"/><path d="M5.5 12.5a9.5 9.5 0 0 1 13 0"/><path d="M8.7 15.9a5 5 0 0 1 6.6 0"/><circle cx="12" cy="19.3" r=".9"/></svg></span>
+        <span class="v">BarberiaPruebas_Clientes</span>
+      </div>
+    </div>
+    <div class="grupo">
+      <span class="kl" id="kl-clave">Contraseña</span>
+      <div class="codigo" id="clave" aria-labelledby="kl-clave">navaja2026</div>
+    </div>
+    <button type="button" class="btn-ac toca" id="copiar">Copiar contraseña</button>
+    <p class="nota">En iPhone: Ajustes › Wi‑Fi. En Android: Ajustes › Conexiones › Wi‑Fi. Elige la red y pega la contraseña.</p>
+  </div>
+</section>
+
+<!-- ============ Hoja: Opinión anónima ============ -->
+<section class="modal" id="m-opinion" role="dialog" aria-modal="true" aria-labelledby="mt-opinion" tabindex="-1" hidden>
+  <div class="m-cabeza"><span class="asa"></span></div>
+  <button type="button" class="cerrar toca" data-cierra aria-label="Cerrar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <div class="m-cuerpo">
+    <h2 class="m-tit" id="mt-opinion">Opinión anónima</h2>
+    <form id="f-opinion" class="pila" novalidate>
+      <p class="m-sub">Habla con confianza: tu opinión es completamente anónima.</p>
+      <label for="op-texto" class="sr">Tu opinión</label>
+      <textarea class="area" id="op-texto" rows="5" placeholder="Cuéntanos qué te gustó o qué podemos mejorar." aria-describedby="op-err"></textarea>
+      <p class="aviso-e" id="op-err" hidden>Escribe tu opinión antes de enviarla.</p>
+      <label class="fila-foto vidrio toca" for="op-foto">
+        <span class="ico-c"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></span>
+        <span class="tt"><span class="t">Adjuntar foto</span><span class="s">Opcional</span></span>
+        <input type="file" id="op-foto" accept="image/*" class="sr">
+      </label>
+      <div class="adjunto" id="op-adj" hidden>
+        <img id="op-img" alt="Miniatura de la foto adjunta">
+        <span id="op-nom"></span>
+        <button type="button" class="btn-link" id="op-quitar">Quitar</button>
+      </div>
+      <button type="submit" class="btn-ac toca">Enviar opinión</button>
+      <p class="nota">Tu opinión le llega al dueño más tarde para cuidar tu anonimato.</p>
+    </form>
+    <div class="exito" id="op-exito" hidden>
+      <svg class="palomita" viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24"/><path d="M15 27l7 7 15-16"/></svg>
+      <h3>Gracias, ya la tenemos</h3>
+      <p>Le llega al dueño sin tu nombre ni tu número. Así puedes decir las cosas como son.</p>
+      <button type="button" class="btn-vid toca" data-cierra style="margin-top:6px">Listo</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ Hoja: Cómo llegar ============ -->
+<section class="modal" id="m-llegar" role="dialog" aria-modal="true" aria-labelledby="mt-llegar" tabindex="-1" hidden>
+  <div class="m-cabeza"><span class="asa"></span></div>
+  <button type="button" class="cerrar toca" data-cierra aria-label="Cerrar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <div class="m-cuerpo">
+    <h2 class="m-tit" id="mt-llegar">Cómo llegar</h2>
+    <div class="mapa vidrio">
+      <svg viewBox="0 0 340 200" role="img" aria-label="Mapa: la barbería está sobre Avenida Juárez, entre Allende y Morelos">
+        <rect width="340" height="200" fill="#0B2023"/>
+        <rect x="170" y="128" width="84" height="46" rx="4" fill="#1E6E5A" opacity=".45"/>
+        <circle cx="188" cy="146" r="6" fill="#2B7560" opacity=".8"/><circle cx="206" cy="156" r="7" fill="#2B7560" opacity=".8"/>
+        <circle cx="228" cy="144" r="6" fill="#2B7560" opacity=".8"/><circle cx="240" cy="160" r="5" fill="#2B7560" opacity=".8"/>
+        <g stroke="#1B3F43" stroke-width="11" stroke-linecap="square">
+          <line x1="0" y1="50" x2="340" y2="50"/><line x1="0" y1="120" x2="340" y2="120"/><line x1="0" y1="182" x2="340" y2="182"/>
+          <line x1="70" y1="0" x2="70" y2="200"/><line x1="164" y1="0" x2="164" y2="200"/><line x1="262" y1="0" x2="262" y2="200"/>
+        </g>
+        <line x1="0" y1="164" x2="340" y2="44" stroke="#2A5A5E" stroke-width="18"/>
+        <line x1="0" y1="164" x2="340" y2="44" stroke="#E9B872" stroke-width="1.2" stroke-dasharray="7 7" opacity=".5"/>
+        <g font-family="IBM Plex Mono, ui-monospace, monospace" font-size="7.5" letter-spacing="1.2" fill="#FFFFFF" fill-opacity=".55">
+          <text x="92" y="134" transform="rotate(-19.4 92 134)">AV. JUÁREZ</text>
+          <text x="98" y="47">MORELOS</text>
+          <text x="67" y="100" transform="rotate(-90 67 100)" text-anchor="middle">ALLENDE</text>
+          <text x="212" y="152" text-anchor="middle" fill-opacity=".7">JARDÍN</text>
+        </g>
+        <circle class="pulso" cx="205" cy="88" r="9" fill="#D9503C"/>
+        <path d="M205 88c-9-11-14-18-14-25a14 14 0 0 1 28 0c0 7-5 14-14 25z" fill="#D9503C" stroke="#20150A" stroke-opacity=".4"/>
+        <circle cx="205" cy="63" r="5" fill="#FFFFFF"/>
+      </svg>
+    </div>
+    <div class="dir">
+      <span class="ico-c"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg></span>
+      <div><div class="t">Av. Juárez 128, Centro</div><div class="s">Entre Allende y Morelos, frente al jardín</div></div>
+    </div>
+    <div class="grupo">
+      <span class="kl">Horario</span>
+      <ul class="horario caja vidrio" id="horario">
+        <li data-dia="1">Lunes<span class="h">10:00–20:00</span></li>
+        <li data-dia="2">Martes<span class="h">10:00–20:00</span></li>
+        <li data-dia="3">Miércoles<span class="h">10:00–20:00</span></li>
+        <li data-dia="4">Jueves<span class="h">10:00–20:00</span></li>
+        <li data-dia="5">Viernes<span class="h">10:00–20:00</span></li>
+        <li data-dia="6">Sábado<span class="h">10:00–20:00</span></li>
+        <li data-dia="0">Domingo<span class="h">Cerrado</span></li>
+      </ul>
+    </div>
+    <button type="button" class="btn-ac toca" data-toast="Esto abriría Maps">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l18-8-8 18-2-8z"/></svg>Abrir en Maps</button>
+  </div>
+</section>
+
+<!-- ============ Hoja: Instagram ============ -->
+<section class="modal" id="m-instagram" role="dialog" aria-modal="true" aria-labelledby="mt-instagram" tabindex="-1" hidden>
+  <div class="m-cabeza"><span class="asa"></span></div>
+  <button type="button" class="cerrar toca" data-cierra aria-label="Cerrar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <div class="m-cuerpo">
+    <h2 class="m-tit" id="mt-instagram">@barberiapruebas</h2>
+    <div class="perfil">
+      <span class="av" aria-hidden="true">B<i>P</i></span>
+      <div class="cifras">
+        <div><b>148</b><span>publicaciones</span></div>
+        <div><b>2,316</b><span>seguidores</span></div>
+        <div><b>312</b><span>seguidos</span></div>
+      </div>
+    </div>
+    <p class="bio"><b>Barbería Pruebas</b><span>Cortes clásicos y fades en el Centro. Sin cita o por WhatsApp.</span></p>
+    <div class="fotos" aria-label="Últimas publicaciones" role="img"><span class="f1"></span><span class="f2"></span><span class="f3"></span><span class="f4"></span><span class="f5"></span><span class="f6"></span></div>
+    <button type="button" class="btn-ac toca" data-toast="Esto abriría Instagram">Seguir</button>
+  </div>
+</section>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  "use strict";
+  var raiz = document.documentElement;
+  var marco = document.getElementById("marco");
+  var cortina = document.getElementById("cortina");
+  var toastEl = document.getElementById("toast");
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+
+  // El poste de barbero gira con SMIL: se detiene si el visitante pidió menos movimiento.
+  var escena = document.getElementById("escena");
+  function pausaEscena() { try { reduce.matches ? escena.pauseAnimations() : escena.unpauseAnimations(); } catch (e) {} }
+  pausaEscena();
+  if (reduce.addEventListener) reduce.addEventListener("change", pausaEscena);
+
+  /* ---------- Toast ---------- */
+  var tt;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add("ve");
+    clearTimeout(tt);
+    tt = setTimeout(function () { toastEl.classList.remove("ve"); }, 2400);
+  }
+
+  /* ---------- Horario: hoy ---------- */
+  var hoy = new Date().getDay();
+  var li = $('#horario li[data-dia="' + hoy + '"]');
+  if (li) {
+    li.classList.add("hoy");
+    var tag = document.createElement("span"); tag.className = "tag"; tag.textContent = "Hoy";
+    li.insertBefore(tag, li.querySelector(".h"));
+  }
+  if (hoy === 0) {
+    $("#estado").classList.add("cerrado");
+    $("#estado-t").textContent = "Cerrado hoy · abre el lunes a las 10:00 am";
+  }
+
+  /* ---------- La tarjeta ---------- */
+  var META = 6, INICIAL = 2;
+  var sellos = INICIAL;
+  var HIST0 = [
+    { t: "Sello en el mostrador", f: "sáb 26 sep · 5:42 pm" },
+    { t: "Sello en el mostrador", f: "sáb 12 sep · 12:15 pm" }
+  ];
+  var hist = HIST0.slice();
+  var CHECK = '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+
+  var puntos = $("#puntos"), rej = $("#rej");
+  for (var i = 0; i < META; i++) {
+    var p = document.createElement("span"); p.className = "pt"; p.innerHTML = CHECK; puntos.appendChild(p);
+    var s = document.createElement("span"); s.className = "sello"; rej.appendChild(s);
+  }
+  var falta = document.createElement("span"); falta.className = "falta"; puntos.appendChild(falta);
+
+  function reinicia(el, clase) { el.classList.remove(clase); void el.offsetWidth; el.classList.add(clase); }
+
+  function pintar(nuevo) {
+    var ganada = sellos >= META, faltan = META - sellos;
+    $("#le-n").textContent = sellos;
+    $("#le-sub").textContent = ganada ? "¡Tu corte gratis está listo!" : "para un corte gratis";
+    $("#lealtad").classList.toggle("ganada", ganada);
+    falta.textContent = ganada ? "LISTO" : "FALTAN " + faltan;
+    $$(".pt", puntos).forEach(function (el, k) {
+      el.classList.toggle("on", k < sellos);
+      if (k === nuevo) reinicia(el, "nuevo"); else el.classList.remove("nuevo");
+    });
+    $$(".sello", rej).forEach(function (el, k) {
+      var on = k < sellos;
+      el.classList.toggle("on", on);
+      el.textContent = on ? "✓" : String(k + 1);
+      if (k === nuevo) reinicia(el, "nuevo"); else el.classList.remove("nuevo");
+    });
+    rej.setAttribute("aria-label", sellos + " de " + META + " sellos");
+    rej.setAttribute("role", "img");
+    $("#cuenta").textContent = sellos + " / " + META;
+    $("#tarj").classList.toggle("ganada", ganada);
+    $("#tarj-pie").innerHTML = ganada
+      ? "<b>¡Tu corte gratis está listo!</b> Enséñale esta pantalla al barbero."
+      : (faltan === 1 ? "Te falta <b>1</b>" : "Te faltan <b>" + faltan + "</b>") + " para tu <b>corte gratis</b>.";
+    $("#demo-toque").textContent = ganada ? "Empezar de nuevo (demo)" : "Simular un toque (demo)";
+    $("#hist").innerHTML = hist.map(function (h, k) {
+      return '<div class="mov' + (k === 0 && nuevo != null && nuevo >= 0 ? " nuevo" : "") + '"><span class="ico-c"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>' +
+        '<div class="d"><div class="t">' + h.t + '</div><div class="f">' + h.f + '</div></div><span class="v">+1</span></div>';
+    }).join("");
+  }
+
+  function horaAhora() {
+    var d = new Date(), h = d.getHours(), m = d.getMinutes();
+    var ampm = h >= 12 ? "pm" : "am"; h = h % 12 || 12;
+    return "hoy · " + h + ":" + (m < 10 ? "0" : "") + m + " " + ampm;
+  }
+
+  function celebrar() {
+    var tarj = $("#tarj"), envol = $("#tarj-envol");
+    reinicia(tarj, "gana");
+    try { if (navigator.vibrate) navigator.vibrate([18, 40, 18]); } catch (e) {}
+    if (reduce.matches) return;
+    var colores = ["var(--ac)", "#FFFFFF", "var(--laton)"];
+    for (var k = 0; k < 16; k++) {
+      var c = document.createElement("span"); c.className = "chispa";
+      var ang = (Math.PI * 2 * k) / 16 + Math.random() * .3, dist = 90 + Math.random() * 70;
+      c.style.setProperty("--dx", Math.cos(ang) * dist + "px");
+      c.style.setProperty("--dy", Math.sin(ang) * dist * .7 + "px");
+      c.style.setProperty("--r", (Math.random() * 360 - 180) + "deg");
+      c.style.setProperty("--c", colores[k % 3]);
+      c.style.animationDelay = (Math.random() * 80) + "ms";
+      envol.appendChild(c);
+      c.addEventListener("animationend", function () { this.remove(); });
+    }
+  }
+
+  $("#demo-toque").addEventListener("click", function () {
+    if (sellos >= META) {
+      sellos = INICIAL; hist = HIST0.slice(); pintar(-1);
+      toast("Tarjeta de demo reiniciada: 2 de 6");
+      return;
+    }
+    sellos++;
+    hist.unshift({ t: "Sello en el mostrador", f: horaAhora() });
+    pintar(sellos - 1);
+    if (sellos >= META) { toastEl.classList.remove("ve"); celebrar(); }
+    else toast("Sello nuevo: llevas " + sellos + " de " + META);
+  });
+
+  pintar(-1);
+
+  /* ---------- Reseña: el mismo trato con 1 o con 5 ---------- */
+  var ESTRELLA = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.9 6.3.7-4.7 4.4 1.3 6.3L12 17.1 6.4 20.3l1.3-6.3L3 9.6l6.3-.7z"/></svg>';
+  var PALABRAS = ["Mal", "Regular", "Bien", "Muy bien", "Excelente"];
+  var cajaEstrellas = $("#estrellas");
+  for (var n = 1; n <= 5; n++) {
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "estrella"; b.dataset.n = n;
+    b.setAttribute("aria-label", n === 1 ? "1 estrella" : n + " estrellas");
+    b.setAttribute("aria-pressed", "false");
+    b.innerHTML = ESTRELLA;
+    cajaEstrellas.appendChild(b);
+  }
+  cajaEstrellas.addEventListener("click", function (e) {
+    var b = e.target.closest(".estrella"); if (!b) return;
+    var n = Number(b.dataset.n);
+    $$(".estrella", cajaEstrellas).forEach(function (el, k) {
+      var on = k < n;
+      el.classList.toggle("on", on);
+      el.setAttribute("aria-pressed", k === n - 1 ? "true" : "false");
+      el.classList.remove("pop");
+      if (on) { void el.offsetWidth; el.style.animationDelay = (k * 45) + "ms"; el.classList.add("pop"); }
+    });
+    $("#leyenda").textContent = PALABRAS[n - 1];
+    $("#invita").hidden = false; // idéntica para cualquier calificación
+  });
+
+  /* ---------- Reservar ---------- */
+  var fRes = $("#f-reserva");
+  function mensaje() {
+    var dia = fRes.querySelector('input[name="dia"]:checked').value;
+    var hora = fRes.querySelector('input[name="hora"]:checked').value;
+    return "Hola, quiero reservar para " + (dia === "hoy" ? "hoy" : dia) + " a las " + hora + ". ¿Tienen lugar?";
+  }
+  function pintaMensaje() { $("#burbuja-t").textContent = mensaje(); }
+  fRes.addEventListener("change", pintaMensaje);
+  pintaMensaje();
+  fRes.addEventListener("submit", function (e) {
+    e.preventDefault();
+    fRes.hidden = true; $("#r-exito").hidden = false;
+  });
+  $("#r-otra").addEventListener("click", function () {
+    $("#r-exito").hidden = true; fRes.hidden = false;
+    fRes.querySelector('input[name="dia"]:checked').focus();
+  });
+
+  /* ---------- Wi-Fi ---------- */
+  var btnCopiar = $("#copiar"), tCopiar;
+  btnCopiar.addEventListener("click", function () {
+    var clave = $("#clave").textContent.trim();
+    function listo() {
+      btnCopiar.textContent = "Copiada ✓";
+      clearTimeout(tCopiar);
+      tCopiar = setTimeout(function () { btnCopiar.textContent = "Copiar contraseña"; }, 2500);
+    }
+    function seleccionar() {
+      try {
+        var r = document.createRange(); r.selectNodeContents($("#clave"));
+        var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      } catch (e) {}
+      toast("No se pudo copiar sola. Ya está seleccionada: cópiala tú.");
+    }
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(clave).then(listo, seleccionar);
+      else seleccionar();
+    } catch (e) { seleccionar(); }
+  });
+
+  /* ---------- Opinión anónima ---------- */
+  var fOp = $("#f-opinion"), opTexto = $("#op-texto"), opFoto = $("#op-foto"), urlFoto = null;
+  opFoto.addEventListener("change", function () {
+    var f = opFoto.files && opFoto.files[0];
+    if (!f) return;
+    if (urlFoto) URL.revokeObjectURL(urlFoto);
+    urlFoto = URL.createObjectURL(f);
+    $("#op-img").src = urlFoto;
+    $("#op-nom").textContent = f.name;
+    $("#op-adj").hidden = false;
+  });
+  function quitaFoto() {
+    if (urlFoto) URL.revokeObjectURL(urlFoto);
+    urlFoto = null; opFoto.value = ""; $("#op-img").removeAttribute("src"); $("#op-adj").hidden = true;
+  }
+  $("#op-quitar").addEventListener("click", quitaFoto);
+  opTexto.addEventListener("input", function () {
+    if (opTexto.value.trim()) { opTexto.classList.remove("error"); $("#op-err").hidden = true; opTexto.removeAttribute("aria-invalid"); }
+  });
+  fOp.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!opTexto.value.trim()) {
+      reinicia(opTexto, "error"); $("#op-err").hidden = false; opTexto.setAttribute("aria-invalid", "true"); opTexto.focus();
+      return;
+    }
+    fOp.hidden = true; $("#op-exito").hidden = false;
+    $("#op-exito button").focus({ preventScroll: true });
+  });
+  function reiniciaOpinion() {
+    if ($("#op-exito").hidden) return;
+    fOp.reset(); quitaFoto(); fOp.hidden = false; $("#op-exito").hidden = true;
+  }
+
+  /* ---------- Hojas modales ---------- */
+  var actual = null, opener = null, suprimirClic = false;
+  var alCerrar = { opinion: reiniciaOpinion };
+
+  function ocultar(m) {
+    m.classList.remove("arriba");
+    m.style.transform = "";
+    var fin = function () { if (!m.classList.contains("arriba")) m.hidden = true; };
+    if (reduce.matches) { fin(); return; }
+    var h = function (e) { if (e.target === m && e.propertyName === "transform") { m.removeEventListener("transitionend", h); fin(); } };
+    m.addEventListener("transitionend", h);
+    setTimeout(fin, 650);
+  }
+
+  function abrir(id, desde) {
+    var m = document.getElementById("m-" + id);
+    if (!m || actual === m) return;
+    if (actual) ocultar(actual);            // cambiar de una hoja a otra sin soltar la página de atrás
+    else opener = desde || document.activeElement;
+    actual = m;
+    m.hidden = false;
+    $(".m-cuerpo", m).scrollTop = 0;
+    void m.offsetWidth;                     // que el navegador registre la posición de abajo antes de subir
+    raiz.classList.add("con-hoja");
+    m.classList.add("arriba");
+    marco.inert = true;
+    m.focus({ preventScroll: true });
+  }
+
+  function cerrar() {
+    if (!actual) return;
+    var m = actual; actual = null;
+    ocultar(m);
+    raiz.classList.remove("con-hoja");
+    raiz.style.removeProperty("--p");
+    marco.inert = false;
+    var id = m.id.slice(2);
+    if (alCerrar[id]) setTimeout(alCerrar[id], 500);
+    if (opener && opener.focus) opener.focus({ preventScroll: true });
+    opener = null;
+  }
+
+  document.addEventListener("click", function (e) {
+    if (suprimirClic) { suprimirClic = false; e.preventDefault(); e.stopPropagation(); return; }
+    var a = e.target.closest("[data-abre]");
+    if (a) { abrir(a.dataset.abre, actual ? opener : a); return; }
+    if (e.target.closest("[data-cierra]")) { cerrar(); return; }
+    var t = e.target.closest("[data-toast]");
+    if (t) toast(t.dataset.toast);
+  }, true);
+  cortina.addEventListener("click", cerrar);
+
+  document.addEventListener("keydown", function (e) {
+    if (!actual) return;
+    if (e.key === "Escape") { e.preventDefault(); cerrar(); return; }
+    if (e.key !== "Tab") return;
+    var foc = $$('button:not([disabled]),[href],input:not([type="hidden"]),textarea,select,[tabindex]:not([tabindex="-1"])', actual)
+      .filter(function (el) { return el.offsetParent !== null || el.classList.contains("sr"); });
+    foc = foc.filter(function (el) { return !el.closest("[hidden]"); });
+    if (!foc.length) { e.preventDefault(); return; }
+    var primero = foc[0], ultimo = foc[foc.length - 1];
+    if (e.shiftKey && (document.activeElement === primero || document.activeElement === actual)) { e.preventDefault(); ultimo.focus(); }
+    else if (!e.shiftKey && document.activeElement === ultimo) { e.preventDefault(); primero.focus(); }
+  });
+
+  /* ---------- Arrastrar hacia abajo para cerrar ---------- */
+  var arr = null;
+  $$(".modal").forEach(function (m) {
+    var cuerpo = $(".m-cuerpo", m);
+
+    m.addEventListener("pointerdown", function (e) {
+      if (m !== actual) return;
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      if (e.target.closest("textarea,input:not(.sr),select")) return;
+      arr = { id: e.pointerId, y0: e.clientY, x0: e.clientX, y: e.clientY, t: e.timeStamp, vel: 0, d: 0,
+              estado: "posible", cabeza: !!e.target.closest(".m-cabeza"), alto: m.offsetHeight };
+    });
+
+    m.addEventListener("pointermove", function (e) {
+      if (!arr || e.pointerId !== arr.id) return;
+      var dy = e.clientY - arr.y0, dx = e.clientX - arr.x0;
+      if (arr.estado === "posible") {
+        if (Math.abs(dy) < 6 && Math.abs(dx) < 6) return;
+        if (dy > 0 && Math.abs(dy) > Math.abs(dx) && (arr.cabeza || cuerpo.scrollTop <= 0)) {
+          arr.estado = "arrastre";
+          try { m.setPointerCapture(e.pointerId); } catch (er) {}
+          raiz.classList.add("arrastrando");
+        } else { arr = null; return; }
+      }
+      var d = dy >= 0 ? dy : -Math.min(24, Math.sqrt(-dy) * 2.2); // hacia arriba apenas cede
+      arr.d = d;
+      var dt = e.timeStamp - arr.t;
+      if (dt > 0) arr.vel = .7 * ((e.clientY - arr.y) / dt) + .3 * arr.vel;
+      arr.y = e.clientY; arr.t = e.timeStamp;
+      m.style.transform = "translateY(" + d + "px)";
+      var p = 1 - Math.max(0, Math.min(1, d / arr.alto));
+      raiz.style.setProperty("--p", p.toFixed(3));
+    });
+
+    function soltar(e) {
+      if (!arr || e.pointerId !== arr.id) return;
+      var a = arr; arr = null;
+      if (a.estado !== "arrastre") return;
+      suprimirClic = true; setTimeout(function () { suprimirClic = false; }, 0);
+      raiz.classList.remove("arrastrando");
+      if (e.type !== "pointercancel" && (a.d > a.alto * .3 || a.vel > .55)) cerrar();
+      else { m.style.transform = ""; raiz.style.removeProperty("--p"); } // regresa con resorte
+    }
+    m.addEventListener("pointerup", soltar);
+    m.addEventListener("pointercancel", soltar);
+
+    // En táctil, que el navegador no se robe el gesto para hacer scroll mientras arrastramos.
+    m.addEventListener("touchmove", function (e) {
+      if (arr && (arr.estado === "arrastre" || (arr.estado === "posible" && cuerpo.scrollTop <= 0 && e.touches[0].clientY > arr.y0))) {
+        if (e.cancelable) e.preventDefault();
+      }
+    }, { passive: false });
+  });
+})();
+</script>

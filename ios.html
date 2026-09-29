@@ -1,0 +1,1357 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex">
+<title>Barbería Pruebas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Columna de teléfono: portada ilustrada, hoja clara que sube encima, tarjetas casi planas y hojas modales estilo iOS */
+:root{
+  --lienzo:#E6E9EF;
+  --fondo:#F2F4F7;
+  --hoja:#F2F3F7;
+  --superficie:rgba(255,255,255,.84);
+  --superficie-hoja:#FFFFFF;
+  --superficie-2:#E8EBF0;
+  --superficie-hover:rgba(255,255,255,1);
+  --anillo:#FFFFFF;
+  --texto:#0B0C0F;
+  --texto-2:#5E6572;
+  --texto-3:#A3A9B4;
+  --sep:rgba(60,64,80,.12);
+  --sep-fuerte:rgba(60,64,80,.24);
+  --borde:rgba(20,28,45,.06);
+  --campo-borde:rgba(20,28,45,.09);
+  --asa:rgba(60,64,80,.26);
+  --acento:#D9503C;
+  --acento-suave:#FBE6E1;
+  --acento-texto:#B23F2C;
+  --primario:#0B0B0D;
+  --primario-texto:#FFFFFF;
+  --enlace:#2A64D2;
+  --foco:#2A64D2;
+  --ok:#22A157;
+  --ok-suave:rgba(34,161,87,.12);
+  --wa:#168A45;
+  --chat-fondo:#EFEAE2;
+  --chat-burbuja:#D9FDD3;
+  --estrella:#F5A623;
+  --estrella-vacia:#D6DAE1;
+  --sombra:0 1px 2px rgba(16,24,40,.04), 0 6px 20px rgba(16,24,40,.045);
+  --sombra-hoja:0 -10px 40px rgba(10,14,22,.16);
+  --atras:#0A0A0C;
+  --velo:rgba(0,0,0,.30);
+  --toast-bg:rgba(28,28,30,.94);
+  --toast-fg:#FFFFFF;
+  --p-rojo:#FCE7E3;   --i-rojo:#C8432F;
+  --p-azul:#E4EDFB;   --i-azul:#2D68D6;
+  --p-verde:#E1F4E8;  --i-verde:#1E8A4B;
+  --p-ambar:#FCEFD9;  --i-ambar:#A2660F;
+  --p-violeta:#ECE7FB;--i-violeta:#6A4FD0;
+  --p-rosa:#FBE5EF;   --i-rosa:#B8336F;
+  --p-cian:#DDF2F4;   --i-cian:#12808E;
+  --p-gris:#EEF0F4;   --i-gris:#4A515E;
+  --p-g:#F1F3F6;
+  --mapa-tierra:#ECEEF2;
+  --mapa-calle:#FFFFFF;
+  --mapa-borde:#D7DBE3;
+  --mapa-parque:#D5EDD9;
+  --mapa-arbol:#B9DEC1;
+  --mapa-texto:#858C98;
+  /* Objetos con color propio (la tarjeta física, el logo): iguales en ambos temas */
+  --pase-a:#261C17;
+  --pase-b:#110D0B;
+  --pase-tinta:#F4ECE2;
+  --pase-tenue:rgba(244,236,226,.55);
+  --pase-sello:#D9503C;
+  --oro:#C9A36A;
+  --f-texto:-apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, "Segoe UI", sans-serif;
+  --f-titulo:-apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", system-ui, "Segoe UI", sans-serif;
+  --f-mono:ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --resorte:cubic-bezier(.32,.72,0,1);
+  --r-tarjeta:20px;
+  --r-hoja:28px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --lienzo:#0B0B0C; --fondo:#000000; --hoja:#1C1C1E; --superficie:#1C1C1E; --superficie-hoja:#2C2C2E;
+    --superficie-2:#3A3A3C; --superficie-hover:#242426; --anillo:#000000;
+    --texto:#F5F5F7; --texto-2:rgba(235,235,245,.62); --texto-3:rgba(235,235,245,.34);
+    --sep:rgba(84,84,88,.55); --sep-fuerte:rgba(235,235,245,.24); --borde:rgba(255,255,255,.05);
+    --campo-borde:rgba(255,255,255,.07); --asa:rgba(235,235,245,.3);
+    --acento:#EC6450; --acento-suave:rgba(236,100,80,.18); --acento-texto:#FF8B77;
+    --primario:#F5F5F7; --primario-texto:#000000; --enlace:#5A9BFF; --foco:#5A9BFF;
+    --ok:#32C36C; --ok-suave:rgba(50,195,108,.16); --wa:#168A45;
+    --chat-fondo:#0B141A; --chat-burbuja:#144D37;
+    --estrella:#FFB938; --estrella-vacia:#3A3A3C;
+    --sombra:none; --sombra-hoja:0 -10px 40px rgba(0,0,0,.5);
+    --atras:#000000; --velo:rgba(0,0,0,.5);
+    --toast-bg:rgba(58,58,60,.96); --toast-fg:#FFFFFF;
+    --p-rojo:rgba(255,105,85,.17);  --i-rojo:#FF8A75;
+    --p-azul:rgba(90,150,255,.17);  --i-azul:#76A8FF;
+    --p-verde:rgba(60,200,120,.16); --i-verde:#52D18C;
+    --p-ambar:rgba(255,190,80,.16); --i-ambar:#F3BC55;
+    --p-violeta:rgba(160,130,255,.18); --i-violeta:#B7A4FF;
+    --p-rosa:rgba(255,100,170,.16); --i-rosa:#FF83BA;
+    --p-cian:rgba(80,200,220,.16);  --i-cian:#62D2E2;
+    --p-gris:rgba(235,235,245,.1);  --i-gris:#D1D1D6;
+    --p-g:#F2F2F7;
+    --mapa-tierra:#232326; --mapa-calle:#3A3A3E; --mapa-borde:#2C2C30; --mapa-parque:#1E3325;
+    --mapa-arbol:#274430; --mapa-texto:#8E8E96;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --lienzo:#0B0B0C; --fondo:#000000; --hoja:#1C1C1E; --superficie:#1C1C1E; --superficie-hoja:#2C2C2E;
+  --superficie-2:#3A3A3C; --superficie-hover:#242426; --anillo:#000000;
+  --texto:#F5F5F7; --texto-2:rgba(235,235,245,.62); --texto-3:rgba(235,235,245,.34);
+  --sep:rgba(84,84,88,.55); --sep-fuerte:rgba(235,235,245,.24); --borde:rgba(255,255,255,.05);
+  --campo-borde:rgba(255,255,255,.07); --asa:rgba(235,235,245,.3);
+  --acento:#EC6450; --acento-suave:rgba(236,100,80,.18); --acento-texto:#FF8B77;
+  --primario:#F5F5F7; --primario-texto:#000000; --enlace:#5A9BFF; --foco:#5A9BFF;
+  --ok:#32C36C; --ok-suave:rgba(50,195,108,.16); --wa:#168A45;
+  --chat-fondo:#0B141A; --chat-burbuja:#144D37;
+  --estrella:#FFB938; --estrella-vacia:#3A3A3C;
+  --sombra:none; --sombra-hoja:0 -10px 40px rgba(0,0,0,.5);
+  --atras:#000000; --velo:rgba(0,0,0,.5);
+  --toast-bg:rgba(58,58,60,.96); --toast-fg:#FFFFFF;
+  --p-rojo:rgba(255,105,85,.17);  --i-rojo:#FF8A75;
+  --p-azul:rgba(90,150,255,.17);  --i-azul:#76A8FF;
+  --p-verde:rgba(60,200,120,.16); --i-verde:#52D18C;
+  --p-ambar:rgba(255,190,80,.16); --i-ambar:#F3BC55;
+  --p-violeta:rgba(160,130,255,.18); --i-violeta:#B7A4FF;
+  --p-rosa:rgba(255,100,170,.16); --i-rosa:#FF83BA;
+  --p-cian:rgba(80,200,220,.16);  --i-cian:#62D2E2;
+  --p-gris:rgba(235,235,245,.1);  --i-gris:#D1D1D6;
+  --p-g:#F2F2F7;
+  --mapa-tierra:#232326; --mapa-calle:#3A3A3E; --mapa-borde:#2C2C30; --mapa-parque:#1E3325;
+  --mapa-arbol:#274430; --mapa-texto:#8E8E96;
+  color-scheme:dark;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scrollbar-gutter:stable;-webkit-text-size-adjust:100%}
+html.bloqueado{overflow:hidden}
+body{
+  margin:0;background:var(--lienzo);color:var(--texto);
+  font-family:var(--f-texto);font-size:16px;line-height:1.4;
+  -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
+  transition:background-color .45s var(--resorte);
+}
+html.hoja-abierta body{background:var(--atras)}
+h1,h2,h3,p,ul{margin:0}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:inherit}
+:focus-visible{outline:2.5px solid var(--foco);outline-offset:2px}
+[tabindex="-1"]:focus{outline:none}
+.oculto{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.sprite{position:absolute;width:0;height:0;overflow:hidden}
+.i{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- La página ---------- */
+.app{
+  position:relative;max-width:430px;margin-inline:auto;background:var(--fondo);
+  transform-origin:50% 0;
+  transition:transform .45s var(--resorte), clip-path .45s var(--resorte);
+}
+@media (min-width:520px){
+  .app{margin-block:28px;border-radius:36px;overflow:hidden;box-shadow:0 30px 80px -24px rgba(20,30,50,.28),0 0 0 1px var(--borde)}
+}
+html.hoja-abierta .app{transform:scale(.94)}
+.app.arrastrando,.hoja.arrastrando,.velo.arrastrando{transition:none}
+
+.portada{position:relative;height:clamp(230px,38vh,310px);overflow:hidden;background:#241A15}
+.portada svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.franjas{animation:poste 2.8s linear infinite}
+@keyframes poste{to{transform:translateY(34.64px)}}
+
+.principal{
+  position:relative;margin-top:-28px;background:var(--fondo);
+  border-radius:28px 28px 0 0;padding:0 16px 36px;
+  display:flex;flex-direction:column;gap:20px;
+}
+.identidad{display:flex;flex-direction:column;gap:6px}
+.logo{
+  width:96px;height:96px;margin-top:-48px;margin-bottom:8px;border-radius:50%;
+  border:4px solid var(--anillo);background:#17120F;overflow:hidden;
+  box-shadow:0 10px 24px -10px rgba(0,0,0,.45);
+}
+.logo svg{width:100%;height:100%;display:block}
+h1{font:700 30px/1.1 var(--f-titulo);letter-spacing:-.026em;text-wrap:balance}
+.sub{font-size:15px;color:var(--texto-2);display:flex;flex-wrap:wrap;align-items:center;gap:2px 6px}
+.abierto{display:inline-flex;align-items:center;gap:6px}
+.abierto::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--ok)}
+
+.tarjeta{background:var(--superficie);border:1px solid var(--borde);border-radius:var(--r-tarjeta);box-shadow:var(--sombra)}
+.hoja .tarjeta{background:var(--superficie-hoja)}
+
+.ic{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;flex:none}
+.ic-acento{background:var(--acento-suave);color:var(--acento)}
+.ic-rojo{background:var(--p-rojo);color:var(--i-rojo)}
+.ic-azul{background:var(--p-azul);color:var(--i-azul)}
+.ic-verde{background:var(--p-verde);color:var(--i-verde)}
+.ic-ambar{background:var(--p-ambar);color:var(--i-ambar)}
+.ic-violeta{background:var(--p-violeta);color:var(--i-violeta)}
+.ic-rosa{background:var(--p-rosa);color:var(--i-rosa)}
+.ic-cian{background:var(--p-cian);color:var(--i-cian)}
+.ic-gris{background:var(--p-gris);color:var(--i-gris)}
+.ic-g{background:var(--p-g)}
+.ic-g svg{width:22px;height:22px}
+
+/* Tarjeta de lealtad */
+.lealtad{padding:18px;display:flex;flex-direction:column;gap:16px;transition:border-color .4s}
+.lealtad.completa{border-color:var(--acento)}
+.lealtad-cabeza{display:flex;align-items:center;gap:14px}
+.lealtad-cuenta{font:600 17px/1.25 var(--f-titulo);letter-spacing:-.01em}
+.lealtad-cuenta b{font-size:23px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;margin-right:2px}
+.lealtad-sub{font-size:15px;color:var(--texto-2)}
+.puntos{display:flex;gap:8px}
+.punto{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--sep-fuerte);transition:background-color .3s,border-color .3s}
+.punto.lleno{background:var(--acento);border-color:var(--acento)}
+.punto.nuevo{animation:rebote .6s var(--resorte)}
+
+.btn-primario,.btn-wa,.btn-secundario{
+  display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:52px;
+  padding:0 20px;border-radius:16px;font-size:17px;font-weight:600;letter-spacing:-.01em;
+  transition:transform .18s var(--resorte),opacity .2s;
+}
+.btn-primario{background:var(--primario);color:var(--primario-texto)}
+.btn-wa{background:var(--wa);color:#FFFFFF}
+.btn-secundario{background:var(--superficie-2);color:var(--texto);min-height:46px;width:auto;font-size:16px}
+.btn-primario:active,.btn-wa:active,.btn-secundario:active{transform:scale(.97);opacity:.88}
+.btn-primario .i,.btn-wa .i{width:20px;height:20px}
+
+/* Renglones de acción */
+.acciones{display:flex;flex-direction:column;gap:10px}
+.renglon{
+  display:flex;align-items:center;gap:14px;width:100%;padding:12px 14px 12px 12px;
+  background:var(--superficie);border:1px solid var(--borde);border-radius:var(--r-tarjeta);box-shadow:var(--sombra);
+  transition:transform .2s var(--resorte),background-color .2s;
+}
+.hoja .renglon{background:var(--superficie-hoja)}
+.renglon:active{transform:scale(.97)}
+@media (hover:hover){.renglon:hover{background:var(--superficie-hover)}}
+.r-cuerpo{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.r-titulo{font-size:16.5px;font-weight:500;letter-spacing:-.012em;color:var(--texto)}
+.r-sub{font-size:13.5px;color:var(--texto-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chevron{width:18px;height:18px;color:var(--texto-3);stroke-width:2.2}
+
+.pie{text-align:center;font-size:12.5px;color:var(--texto-3);padding-top:6px}
+
+/* ---------- Hojas ---------- */
+.velo{position:fixed;inset:0;z-index:10;background:var(--velo);opacity:0;transition:opacity .45s var(--resorte);touch-action:none}
+html.hoja-abierta .velo{opacity:1}
+.hoja{
+  position:fixed;left:0;right:0;bottom:0;z-index:20;margin-inline:auto;width:100%;max-width:430px;
+  max-height:calc(100vh - 40px - env(safe-area-inset-top,0px));
+  max-height:calc(100dvh - 40px - env(safe-area-inset-top,0px));
+  display:flex;flex-direction:column;background:var(--hoja);color:var(--texto);
+  border-radius:var(--r-hoja) var(--r-hoja) 0 0;box-shadow:var(--sombra-hoja);
+  transform:translateY(calc(100% + 24px));transition:transform .45s var(--resorte);will-change:transform;
+}
+.hoja.abierta{transform:translateY(0)}
+.hoja:focus{outline:none}
+.hoja-cabeza{position:relative;flex:none;height:44px;touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
+.hoja-cabeza:active{cursor:grabbing}
+.asa{position:absolute;top:7px;left:50%;width:38px;height:5px;margin-left:-19px;border-radius:3px;background:var(--asa)}
+.cerrar{position:absolute;top:12px;right:14px;width:32px;height:32px;border-radius:50%;background:var(--superficie-2);color:var(--texto-2);display:grid;place-items:center}
+.cerrar .i{width:15px;height:15px;stroke-width:2.6}
+.hoja-cuerpo{
+  flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+  padding:2px 20px calc(28px + env(safe-area-inset-bottom,0px));
+  display:flex;flex-direction:column;gap:16px;
+}
+.hoja-cuerpo>*,.pila>*{flex-shrink:0}
+.pila{display:flex;flex-direction:column;gap:16px}
+.h-grande{font:700 28px/1.12 var(--f-titulo);letter-spacing:-.026em;padding-right:36px;text-wrap:balance;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
+.sub-hoja{margin-top:-8px;color:var(--texto-2);font-size:15.5px;line-height:1.45}
+.h-seccion{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--texto-2);padding:6px 0 0 4px;margin-bottom:-8px}
+.nota{text-align:center;font-size:13.5px;color:var(--texto-2);line-height:1.45;text-wrap:balance}
+.enlace{align-self:center;color:var(--enlace);font-weight:500;font-size:15.5px;padding:6px 10px;border-radius:8px}
+
+.lista{list-style:none;padding:0 0 0 16px}
+.lista li{display:flex;align-items:center;gap:12px;padding:13px 16px 13px 0;border-bottom:.5px solid var(--sep);min-height:48px}
+.lista li:last-child{border-bottom:0}
+.lista .r-cuerpo{gap:2px}
+.meta{font-size:13.5px;color:var(--texto-2)}
+
+/* El pase (la tarjeta grande) */
+.pase{
+  position:relative;overflow:hidden;border-radius:22px;padding:18px 18px 20px;
+  display:flex;flex-direction:column;gap:22px;color:var(--pase-tinta);
+  background:radial-gradient(120% 90% at 100% 0%,rgba(217,80,60,.30),transparent 55%),linear-gradient(160deg,var(--pase-a),var(--pase-b));
+  border:1px solid rgba(255,255,255,.06);box-shadow:0 18px 40px -20px rgba(40,20,10,.6);
+}
+.pase-cabeza{display:flex;align-items:center;gap:12px}
+.pase-logo{width:40px;height:40px;border-radius:50%;flex:none;overflow:hidden;box-shadow:0 0 0 1px rgba(201,163,106,.35)}
+.pase-logo svg{width:100%;height:100%;display:block}
+.pase-nombre{font-weight:600;font-size:16px;letter-spacing:-.01em}
+.pase-tipo{font-size:12.5px;color:var(--pase-tenue)}
+.pase-num{margin-left:auto;font-family:var(--f-mono);font-size:12px;color:var(--pase-tenue);letter-spacing:.04em}
+.sellos{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 10px}
+.sello{
+  justify-self:center;width:100%;max-width:64px;aspect-ratio:1;border-radius:50%;
+  display:grid;place-items:center;border:1.5px dashed rgba(244,236,226,.28);
+  color:var(--pase-tenue);font-weight:600;font-size:18px;font-variant-numeric:tabular-nums;position:relative;
+  transition:background-color .3s,border-color .3s;
+}
+.sello .i{width:26px;height:26px;stroke-width:2.6;display:none;color:#FFFFFF}
+.sello .tijera{width:24px;height:24px;stroke-width:1.8;display:block;color:var(--oro)}
+.sello.lleno{background:var(--pase-sello);border:1.5px solid var(--pase-sello);box-shadow:inset 0 -3px 0 rgba(0,0,0,.14)}
+.sello.lleno .num,.sello.lleno .tijera{display:none}
+.sello.lleno .palomita-s{display:block}
+.sello.nuevo{animation:rebote .7s var(--resorte)}
+.sello.nuevo::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--pase-sello);animation:onda .7s ease-out forwards}
+@keyframes rebote{0%{transform:scale(.35)}55%{transform:scale(1.14)}78%{transform:scale(.96)}100%{transform:scale(1)}}
+@keyframes onda{from{opacity:.8;transform:scale(.8)}to{opacity:0;transform:scale(1.35)}}
+.pase-pie{font-size:15px;color:var(--pase-tenue);text-align:center}
+.pase-pie b{color:var(--pase-tinta);font-weight:600}
+.premio{background:rgba(255,255,255,.08);border:1px solid rgba(201,163,106,.35);border-radius:16px;padding:14px 16px;text-align:center;display:flex;flex-direction:column;gap:3px}
+.premio-t{font:700 19px/1.2 var(--f-titulo);letter-spacing:-.015em;color:var(--pase-tinta)}
+.premio p:last-child{font-size:14.5px;color:var(--pase-tenue)}
+.pase.celebra{animation:latido .8s var(--resorte)}
+.pase.celebra::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(105deg,transparent 35%,rgba(255,236,210,.2) 50%,transparent 65%);
+  transform:translateX(-100%);animation:barrido 1.1s ease-out .12s forwards;
+}
+@keyframes latido{0%{transform:scale(1)}40%{transform:scale(1.025)}100%{transform:scale(1)}}
+@keyframes barrido{to{transform:translateX(100%)}}
+.chispas{position:absolute;inset:0;pointer-events:none}
+.chispas i{
+  position:absolute;left:50%;top:48%;width:7px;height:7px;border-radius:2px;background:var(--c);opacity:0;
+  animation:chispa 1.2s var(--resorte) forwards;animation-delay:var(--d);
+}
+@keyframes chispa{
+  0%{opacity:1;transform:translate(-50%,-50%) scale(.5) rotate(0)}
+  100%{opacity:0;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1) rotate(var(--r))}
+}
+.fila-info{display:flex;align-items:center;gap:14px;padding:14px}
+.fila-info p{font-size:15px;line-height:1.4}
+.btn-demo{align-self:center;font-size:14px;font-weight:500;color:var(--texto-2);padding:9px 16px;border-radius:999px;border:1px dashed var(--sep-fuerte);transition:transform .18s var(--resorte)}
+.btn-demo:active{transform:scale(.96)}
+.mas{font-weight:600;font-size:15px;color:var(--acento-texto);font-variant-numeric:tabular-nums}
+.ic-mini{width:30px;height:30px;border-radius:50%;background:var(--acento-suave);color:var(--acento);display:grid;place-items:center;flex:none}
+.ic-mini .i{width:16px;height:16px;stroke-width:2.6}
+
+/* Reseña */
+.estrellas{display:flex;justify-content:center;gap:8px;padding:6px 0 0}
+.estrella{width:50px;height:50px;border-radius:12px;display:grid;place-items:center;color:var(--estrella-vacia);transition:color .2s,transform .2s var(--resorte)}
+.estrella svg{width:42px;height:42px;fill:currentColor;stroke:none}
+.estrella.on{color:var(--estrella)}
+.estrella:active{transform:scale(.9)}
+.estrella.pop{animation:pop .45s var(--resorte)}
+@keyframes pop{0%{transform:scale(.7)}60%{transform:scale(1.18)}100%{transform:scale(1)}}
+.leyenda{text-align:center;font-size:15px;font-weight:500;color:var(--texto-2);min-height:21px}
+.invitacion{padding:22px 20px 18px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;animation:aparece .5s var(--resorte)}
+.invitacion h3{font:700 21px/1.2 var(--f-titulo);letter-spacing:-.018em;text-wrap:balance}
+.invitacion p{font-size:15px;color:var(--texto-2);line-height:1.45;text-wrap:balance}
+.invitacion .letra-fina{font-size:13px}
+.g-grande{width:54px;height:54px;border-radius:50%;background:var(--p-g);display:grid;place-items:center;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.g-grande svg{width:28px;height:28px}
+@keyframes aparece{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
+
+/* Servicios */
+.precio{margin-left:auto;font-weight:600;font-size:17px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+
+/* Reservar */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{
+  min-height:42px;padding:0 18px;border-radius:999px;background:var(--superficie-hoja);border:1px solid var(--sep);
+  font-weight:500;font-size:15.5px;font-variant-numeric:tabular-nums;transition:background-color .2s,color .2s,transform .18s var(--resorte);
+}
+.chips-hora{display:grid;grid-template-columns:repeat(4,1fr)}
+.chips-hora .chip{padding:0;text-align:center}
+.chip:active{transform:scale(.95)}
+.chip[aria-pressed="true"]{background:var(--primario);color:var(--primario-texto);border-color:transparent}
+.chat{background:var(--chat-fondo);border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:6px}
+.chat-etiqueta{font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--texto-2);align-self:center;background:var(--superficie-hoja);padding:3px 10px;border-radius:8px}
+.burbuja{align-self:flex-end;max-width:88%;background:var(--chat-burbuja);color:var(--texto);padding:9px 12px 7px;border-radius:16px 16px 4px 16px;font-size:15px;line-height:1.4;box-shadow:0 1px 1px rgba(0,0,0,.06)}
+.burbuja small{display:block;text-align:right;font-size:11px;color:var(--texto-2);margin-top:2px}
+
+/* Éxito */
+.exito{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:18px 6px 4px}
+.exito h3{font:700 22px/1.2 var(--f-titulo);letter-spacing:-.018em}
+.exito p{color:var(--texto-2);font-size:15px;line-height:1.45;max-width:32ch;text-wrap:balance}
+.exito .btn-secundario{margin-top:8px}
+.palomita{width:72px;height:72px;margin-bottom:4px}
+.palomita circle{fill:var(--ok-suave);stroke:var(--ok);stroke-width:3;stroke-dasharray:176;stroke-dashoffset:176;animation:trazo .6s var(--resorte) forwards;transform:rotate(-90deg);transform-origin:center}
+.palomita path{fill:none;stroke:var(--ok);stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40;stroke-dashoffset:40;animation:trazo .45s var(--resorte) .35s forwards}
+@keyframes trazo{to{stroke-dashoffset:0}}
+
+/* Wi-Fi */
+.dato{display:flex;justify-content:space-between;gap:12px;align-items:center}
+.dato span:first-child{color:var(--texto-2);font-size:15px;flex:none}
+.dato b{font-weight:600;font-size:15.5px;min-width:0;overflow-wrap:anywhere;text-align:right}
+.clave{font-family:var(--f-mono);font-size:16px;letter-spacing:.03em;background:var(--superficie-2);padding:4px 9px;border-radius:8px;user-select:all;-webkit-user-select:all}
+.btn-primario.hecho{background:var(--ok);color:#FFFFFF}
+
+/* Opinión */
+.campo{
+  width:100%;min-height:170px;resize:vertical;display:block;border-radius:18px;border:1px solid var(--campo-borde);
+  background:var(--superficie-hoja);color:var(--texto);padding:16px;font:inherit;font-size:16px;line-height:1.45;
+  transition:border-color .2s,box-shadow .2s;
+}
+.campo::placeholder{color:var(--texto-3)}
+.campo:focus{outline:none;border-color:var(--foco);box-shadow:0 0 0 4px color-mix(in srgb,var(--foco) 18%,transparent)}
+.campo.sacude{animation:sacude .4s}
+@keyframes sacude{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.contador{text-align:right;font-size:12.5px;color:var(--texto-3);margin-top:-10px;font-variant-numeric:tabular-nums}
+.aviso-campo{font-size:14px;color:var(--acento-texto);margin-top:-8px}
+.miniatura{display:flex;align-items:center;gap:12px;padding:10px 12px 10px 10px}
+.miniatura img{width:56px;height:56px;border-radius:12px;object-fit:cover;flex:none;background:var(--superficie-2)}
+
+/* Cómo llegar */
+.mapa{border-radius:18px;overflow:hidden;border:1px solid var(--borde);aspect-ratio:16/10;max-width:100%;background:var(--mapa-tierra)}
+.mapa svg{width:100%;height:100%;display:block}
+.m-tierra{fill:var(--mapa-tierra)}
+.m-borde{stroke:var(--mapa-borde);fill:none;stroke-linecap:round}
+.m-calle{stroke:var(--mapa-calle);fill:none;stroke-linecap:round}
+.m-parque{fill:var(--mapa-parque)}
+.m-arbol{fill:var(--mapa-arbol)}
+.m-texto{fill:var(--mapa-texto);font:600 9.5px var(--f-texto);letter-spacing:.06em;text-transform:uppercase}
+.m-pin{fill:var(--acento)}
+.m-etiqueta{fill:var(--superficie-hoja)}
+.m-etiqueta-t{fill:var(--texto);font:600 11px var(--f-texto)}
+.m-onda{fill:var(--acento);opacity:.25;transform-origin:160px 112px;transform-box:view-box;animation:pulso 2.2s ease-out infinite}
+@keyframes pulso{from{transform:scale(.3);opacity:.45}to{transform:scale(2.4);opacity:0}}
+.direccion{display:flex;align-items:center;gap:14px;padding:14px}
+.horario li{justify-content:space-between}
+.horario .h-dia{font-size:15.5px}
+.horario .h-hora{font-size:15.5px;color:var(--texto-2);font-variant-numeric:tabular-nums}
+.horario li.hoy .h-dia,.horario li.hoy .h-hora{font-weight:600;color:var(--texto)}
+.insignia{font-size:11.5px;font-weight:600;color:var(--acento-texto);background:var(--acento-suave);padding:2px 8px;border-radius:999px;margin-left:8px;vertical-align:1px}
+
+/* Instagram */
+.ig-perfil{display:flex;align-items:center;gap:18px}
+.ig-avatar{width:84px;height:84px;border-radius:50%;padding:3px;flex:none;background:conic-gradient(from 200deg,#F9CE34,#EE2A7B,#6228D7,#F9CE34)}
+.ig-avatar span{display:block;width:100%;height:100%;border-radius:50%;border:3px solid var(--hoja);overflow:hidden;background:#17120F}
+.ig-avatar svg{width:100%;height:100%;display:block}
+.ig-cifras{flex:1;min-width:0;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;text-align:center}
+.ig-cifras b{display:block;font-size:18px;font-weight:700;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.ig-cifras span{font-size:12.5px;color:var(--texto-2)}
+.ig-bio{font-size:15px;line-height:1.45}
+.ig-bio b{display:block;font-weight:600}
+.ig-rejilla{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;border-radius:16px;overflow:hidden}
+.ig-rejilla div{aspect-ratio:1;max-width:100%;position:relative;display:grid;place-items:center;color:rgba(255,255,255,.55)}
+.ig-rejilla .i{width:28px;height:28px;stroke-width:1.6}
+.f1{background:linear-gradient(140deg,#3B2A20,#8C5A3C)}
+.f2{background:repeating-linear-gradient(-35deg,#C8382A 0 10px,#F4EFE6 10px 15px,#27447A 15px 25px,#F4EFE6 25px 30px)}
+.f3{background:radial-gradient(circle at 30% 28%,#F6CF9A,#9A5B33 60%,#4A2A18)}
+.f4{background:linear-gradient(160deg,#243433,#56766F)}
+.f5{background:linear-gradient(135deg,#D9503C,#6E1C12)}
+.f6{background:radial-gradient(circle at 70% 70%,#C9A36A,#3A2A20 70%)}
+
+/* Toast */
+.toast{
+  position:fixed;z-index:40;left:16px;right:16px;margin-inline:auto;width:fit-content;max-width:398px;
+  top:calc(env(safe-area-inset-top,0px) + 12px);
+  display:flex;align-items:center;gap:10px;padding:10px 18px 10px 10px;border-radius:24px;
+  background:var(--toast-bg);color:var(--toast-fg);font-size:15px;font-weight:500;line-height:1.3;
+  box-shadow:0 12px 32px -10px rgba(0,0,0,.4);
+  -webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);
+  transform:translateY(-160%);opacity:0;pointer-events:none;
+  transition:transform .55s var(--resorte),opacity .3s;
+}
+.toast.visible{transform:translateY(0);opacity:1}
+.toast-ic{width:26px;height:26px;border-radius:50%;background:var(--ok);color:#FFFFFF;display:grid;place-items:center;flex:none}
+.toast-ic .i{width:15px;height:15px;stroke-width:2.8}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;animation-delay:0s!important}
+  .franjas,.m-onda{animation:none!important}
+  .app,.renglon,.btn-primario,.btn-wa,.chip{transition:none!important}
+  html.hoja-abierta .app{transform:none}
+  .hoja,.hoja.abierta{transform:translateY(0);transition:opacity .2s linear}
+  .hoja:not(.abierta){opacity:0}
+  .toast{transform:none;transition:opacity .2s}
+}
+</style>
+
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-corazon" viewBox="0 0 24 24"><path d="M12 20.3s-7.4-4.5-9.2-9.3C1.7 7.9 3.8 4.6 7.2 4.6c2 0 3.6 1.1 4.8 2.8 1.2-1.7 2.8-2.8 4.8-2.8 3.4 0 5.5 3.3 4.4 6.4-1.8 4.8-9.2 9.3-9.2 9.3z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-tarjeta" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2.6"/><path d="M3 10h18M7 14.8h3.5"/></symbol>
+  <symbol id="i-tijeras" viewBox="0 0 24 24"><circle cx="6" cy="7" r="2.6"/><circle cx="6" cy="17" r="2.6"/><path d="M8.2 8.4 20 17M8.2 15.6 20 7"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M20 11.6a8 8 0 0 1-11.7 7.1L4 19.9l1.3-4.1A8 8 0 1 1 20 11.6z"/><path d="M9.2 9.3c.3 2.4 2.2 4.4 4.8 5" /></symbol>
+  <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M2.5 9a14 14 0 0 1 19 0M5.6 12.3a9.5 9.5 0 0 1 12.8 0M8.7 15.6a5 5 0 0 1 6.6 0"/><circle cx="12" cy="19" r="1.25" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-anonimo" viewBox="0 0 24 24"><path d="M4 6.6A2.6 2.6 0 0 1 6.6 4h10.8A2.6 2.6 0 0 1 20 6.6v7.8a2.6 2.6 0 0 1-2.6 2.6H10l-4.6 3.4V17A2.6 2.6 0 0 1 4 14.4z"/><path d="M8.6 10.5h.01M12 10.5h.01M15.4 10.5h.01" stroke-width="2.7"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></symbol>
+  <symbol id="i-instagram" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.05" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M9 5.5 15.5 12 9 18.5"/></symbol>
+  <symbol id="i-cerrar" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-nfc" viewBox="0 0 24 24"><path d="M9 8.5a5 5 0 0 1 0 7M12.3 6a8.5 8.5 0 0 1 0 12M15.7 3.6a12 12 0 0 1 0 16.8"/><circle cx="5.6" cy="12" r="1.35" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M4 8A2.6 2.6 0 0 1 6.6 5.4H17.5V8"/><rect x="4" y="8" width="16.5" height="11" rx="2.6"/><path d="M16.2 13.5h.01" stroke-width="2.8"/></symbol>
+  <symbol id="i-copiar" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="11" height="11" rx="2.5"/><path d="M15.5 8.5V6.6a2 2 0 0 0-2-2h-7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h2"/></symbol>
+  <symbol id="i-camara" viewBox="0 0 24 24"><path d="M4 8.6a2 2 0 0 1 2-2h1.8l1.4-2h5.6l1.4 2H18a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.8" r="3.3"/></symbol>
+  <symbol id="i-estrella" viewBox="0 0 24 24"><path d="M12 2.9l2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.2l-5.6 2.9 1.1-6.2L3 9.5l6.2-.9z" stroke-linejoin="round"/></symbol>
+  <symbol id="i-flecha" viewBox="0 0 24 24"><path d="M20 4 3.5 10.8l7.2 2.5 2.5 7.2z"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><path d="M12 11v6M12 7.2h.01" stroke-width="2.8"/></symbol>
+  <symbol id="i-g" viewBox="0 0 48 48">
+    <path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.7-.4-3.9z"/>
+    <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/>
+    <path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2A11.9 11.9 0 0 1 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/>
+    <path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3a12 12 0 0 1-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.7-.4-3.9z"/>
+  </symbol>
+  <symbol id="logo-bp" viewBox="0 0 96 96">
+    <circle cx="48" cy="48" r="48" fill="#17120F"/>
+    <circle cx="48" cy="48" r="39" fill="none" stroke="#C9A36A" stroke-opacity=".55" stroke-width="1"/>
+    <text x="48" y="31" text-anchor="middle" font-family="-apple-system,'Inter',system-ui,sans-serif" font-size="6" font-weight="600" letter-spacing="1.6" fill="#C9A36A" fill-opacity=".85">EST. 2019</text>
+    <text x="48.5" y="58" text-anchor="middle" font-family="'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif" font-size="30" font-weight="600" letter-spacing="1" fill="#F4E9D8">BP</text>
+    <text x="49" y="72" text-anchor="middle" font-family="-apple-system,'Inter',system-ui,sans-serif" font-size="6.2" font-weight="600" letter-spacing="2.2" fill="#C9A36A">BARBERÍA</text>
+  </symbol>
+</svg>
+
+<div class="app" id="app">
+  <header class="portada">
+    <svg viewBox="0 0 390 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+      <defs>
+        <linearGradient id="c-muro" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1B1411"/><stop offset=".6" stop-color="#34261E"/><stop offset="1" stop-color="#2A1E18"/></linearGradient>
+        <pattern id="c-tapiz" width="18" height="18" patternUnits="userSpaceOnUse"><path d="M9 0v18" stroke="#FFFFFF" stroke-opacity=".035" stroke-width="6"/></pattern>
+        <radialGradient id="c-luz" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFD9A1" stop-opacity=".62"/><stop offset=".35" stop-color="#FFB870" stop-opacity=".22"/><stop offset="1" stop-color="#FF9D4D" stop-opacity="0"/></radialGradient>
+        <radialGradient id="c-neon-luz" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FF6A4D" stop-opacity=".32"/><stop offset="1" stop-color="#FF6A4D" stop-opacity="0"/></radialGradient>
+        <linearGradient id="c-espejo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#76878A"/><stop offset=".45" stop-color="#3E4B4D"/><stop offset="1" stop-color="#1D2425"/></linearGradient>
+        <linearGradient id="c-oro" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E9C88E"/><stop offset=".5" stop-color="#9F763D"/><stop offset="1" stop-color="#D8B06D"/></linearGradient>
+        <linearGradient id="c-madera" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5B3A25"/><stop offset="1" stop-color="#321F13"/></linearGradient>
+        <linearGradient id="c-marmol" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#CFC6B8"/><stop offset=".5" stop-color="#F1EADF"/><stop offset="1" stop-color="#B8AE9F"/></linearGradient>
+        <linearGradient id="c-cromo" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#666"/><stop offset=".3" stop-color="#F2F2F2"/><stop offset=".55" stop-color="#999"/><stop offset=".8" stop-color="#E2E2E2"/><stop offset="1" stop-color="#5C5C5C"/></linearGradient>
+        <linearGradient id="c-cuero" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3A120E"/><stop offset=".42" stop-color="#7E2C22"/><stop offset="1" stop-color="#360F0B"/></linearGradient>
+        <linearGradient id="c-cilindro" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".5"/><stop offset=".32" stop-color="#FFF" stop-opacity=".28"/><stop offset=".5" stop-color="#FFF" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".55"/></linearGradient>
+        <pattern id="c-franjas" width="60" height="30" patternUnits="userSpaceOnUse" patternTransform="rotate(-30)">
+          <rect width="60" height="30" fill="#F4EFE6"/><rect width="60" height="9" fill="#C8382A"/><rect y="15" width="60" height="9" fill="#27447A"/>
+        </pattern>
+        <clipPath id="c-poste-clip"><rect x="319" y="62" width="24" height="136" rx="3"/></clipPath>
+        <clipPath id="c-espejo-clip"><path d="M152 206V112a53 53 0 0 1 106 0v94z"/></clipPath>
+        <radialGradient id="c-vineta" cx=".5" cy=".42" r=".78"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".6"/></radialGradient>
+        <linearGradient id="c-bajo" x1="0" y1="0" x2="0" y2="1"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".45"/></linearGradient>
+        <filter id="c-grano" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .08 0"/></filter>
+        <filter id="c-brillo" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3"/></filter>
+      </defs>
+
+      <rect width="390" height="300" fill="url(#c-muro)"/>
+      <rect width="390" height="214" fill="url(#c-tapiz)"/>
+      <!-- lambrín de madera -->
+      <rect y="211" width="390" height="5" fill="#6E4A2F"/>
+      <rect y="216" width="390" height="84" fill="url(#c-madera)"/>
+      <g fill="none" stroke="#000" stroke-opacity=".28">
+        <rect x="8" y="228" width="52" height="62" rx="2"/><rect x="72" y="228" width="52" height="62" rx="2"/>
+        <rect x="302" y="228" width="36" height="62" rx="2"/><rect x="348" y="228" width="36" height="62" rx="2"/>
+      </g>
+      <g fill="none" stroke="#FFF" stroke-opacity=".06">
+        <rect x="9" y="229" width="52" height="62" rx="2"/><rect x="73" y="229" width="52" height="62" rx="2"/>
+        <rect x="303" y="229" width="36" height="62" rx="2"/><rect x="349" y="229" width="36" height="62" rx="2"/>
+      </g>
+
+      <!-- luz cálida de la lámpara y del neón -->
+      <circle cx="205" cy="62" r="175" fill="url(#c-luz)"/>
+      <circle cx="80" cy="112" r="92" fill="url(#c-neon-luz)"/>
+      <circle cx="331" cy="130" r="70" fill="url(#c-neon-luz)" opacity=".6"/>
+
+      <!-- letrero de neón -->
+      <g font-family="Inter, -apple-system, system-ui, sans-serif" font-weight="600" font-size="16" letter-spacing="5" text-anchor="middle">
+        <rect x="26" y="92" width="110" height="40" rx="20" fill="none" stroke="#FF7A5C" stroke-width="3.5" filter="url(#c-brillo)"/>
+        <rect x="26" y="92" width="110" height="40" rx="20" fill="none" stroke="#FFD6C8" stroke-width="1.2"/>
+        <text x="84" y="118" fill="none" stroke="#FF6B4A" stroke-width="3" filter="url(#c-brillo)">BARBER</text>
+        <text x="84" y="118" fill="#FFE6DD">BARBER</text>
+      </g>
+
+      <!-- espejo con marco dorado -->
+      <path d="M152 206V112a53 53 0 0 1 106 0v94z" fill="url(#c-espejo)"/>
+      <g clip-path="url(#c-espejo-clip)">
+        <circle cx="205" cy="64" r="80" fill="url(#c-luz)" opacity=".75"/>
+        <path d="M150 196 222 58h22L172 196z" fill="#FFF" opacity=".07"/>
+        <path d="M184 206 254 72h7L191 206z" fill="#FFF" opacity=".06"/>
+        <rect x="236" y="120" width="8" height="70" fill="#C8382A" opacity=".18"/>
+      </g>
+      <path d="M152 206V112a53 53 0 0 1 106 0v94z" fill="none" stroke="url(#c-oro)" stroke-width="6"/>
+
+      <!-- lámpara colgante -->
+      <path d="M205 0v34" stroke="#0E0B09" stroke-width="1.6"/>
+      <path d="M186 50c0-12 8.5-18 19-18s19 6 19 18z" fill="url(#c-oro)"/>
+      <ellipse cx="205" cy="50" rx="19" ry="3.2" fill="#FFF4DC"/>
+      <ellipse cx="205" cy="53" rx="12" ry="5" fill="#FFF" opacity=".75" filter="url(#c-brillo)"/>
+
+      <!-- diploma -->
+      <rect x="272" y="98" width="32" height="40" rx="1.5" fill="#EFE6D4" stroke="#8E6A38" stroke-width="2.5"/>
+      <g stroke="#8E6A38" stroke-opacity=".45" stroke-width="1.2"><path d="M279 108h18M281 113h14M279 120h18M279 125h12"/></g>
+      <circle cx="295" cy="131" r="2.6" fill="#C8382A" opacity=".8"/>
+
+      <!-- poste de barbero -->
+      <rect x="326" y="206" width="10" height="10" fill="url(#c-cromo)" opacity=".6"/>
+      <g clip-path="url(#c-poste-clip)">
+        <g class="franjas"><rect x="296" y="10" width="72" height="240" fill="url(#c-franjas)"/></g>
+        <rect x="319" y="62" width="24" height="136" fill="url(#c-cilindro)"/>
+      </g>
+      <path d="M317 61v-5a14 12 0 0 1 28 0v5z" fill="url(#c-cromo)"/>
+      <circle cx="331" cy="41" r="4" fill="url(#c-cromo)"/>
+      <rect x="315" y="59" width="32" height="5" rx="2" fill="url(#c-cromo)"/>
+      <rect x="315" y="196" width="32" height="5" rx="2" fill="url(#c-cromo)"/>
+      <path d="M318 201h26l-4 9h-18z" fill="url(#c-cromo)"/>
+
+      <!-- tocador de mármol y frascos -->
+      <rect x="112" y="206" width="186" height="8" rx="2" fill="url(#c-marmol)"/>
+      <rect x="116" y="214" width="178" height="86" fill="#26170E"/>
+      <path d="M116 244h178M205 214v86" stroke="#000" stroke-opacity=".35"/>
+      <g>
+        <rect x="124" y="181" width="12" height="25" rx="3" fill="#B8742E"/>
+        <rect x="127" y="174" width="6" height="8" rx="1" fill="#1E130C"/>
+        <rect x="126" y="184" width="2" height="17" rx="1" fill="#FFF" opacity=".35"/>
+        <rect x="140" y="192" width="17" height="14" rx="3" fill="#2F5D8A"/>
+        <rect x="139" y="188" width="19" height="5" rx="1.5" fill="#D8D0C2"/>
+        <rect x="248" y="182" width="11" height="24" rx="3" fill="#DDE5E2" opacity=".85"/>
+        <path d="M251 182v-5h6l3 2" fill="none" stroke="#1E1E1E" stroke-width="2"/>
+        <rect x="266" y="176" width="21" height="30" rx="4" fill="#3AA1B8" opacity=".78"/>
+        <g stroke="#1C1C1C" stroke-width="1.6" opacity=".7"><path d="M271 170v24M276 168v26M281 171v23"/></g>
+        <rect x="265" y="174" width="23" height="4" rx="1.5" fill="url(#c-cromo)"/>
+      </g>
+
+      <!-- sillón de barbero visto por detrás -->
+      <rect x="202" y="150" width="6" height="24" fill="url(#c-cromo)"/>
+      <rect x="186" y="136" width="38" height="18" rx="9" fill="url(#c-cuero)"/>
+      <path d="M176 182q0-11 11-11h36q11 0 11 11v118h-58z" fill="url(#c-cuero)"/>
+      <path d="M186 173h38" stroke="#FFF" stroke-opacity=".16"/>
+      <g stroke="#000" stroke-opacity=".22"><path d="M195 178v122M215 178v122"/></g>
+      <g fill="#000" opacity=".28">
+        <circle cx="185" cy="196" r="1.6"/><circle cx="205" cy="196" r="1.6"/><circle cx="225" cy="196" r="1.6"/>
+        <circle cx="195" cy="214" r="1.6"/><circle cx="215" cy="214" r="1.6"/>
+        <circle cx="185" cy="232" r="1.6"/><circle cx="205" cy="232" r="1.6"/><circle cx="225" cy="232" r="1.6"/>
+      </g>
+      <rect x="158" y="234" width="20" height="6" rx="3" fill="url(#c-cromo)"/>
+      <rect x="232" y="234" width="20" height="6" rx="3" fill="url(#c-cromo)"/>
+
+      <rect width="390" height="300" fill="url(#c-vineta)"/>
+      <rect width="390" height="300" fill="url(#c-bajo)"/>
+      <rect width="390" height="300" fill="#000" filter="url(#c-grano)"/>
+    </svg>
+  </header>
+
+  <main class="principal">
+    <div class="identidad">
+      <div class="logo" aria-hidden="true"><svg viewBox="0 0 96 96"><use href="#logo-bp"/></svg></div>
+      <h1>Barbería Pruebas</h1>
+      <p class="sub"><span>Barbería</span><span aria-hidden="true">·</span><span class="abierto">Abierto hoy hasta las 8:00 pm</span></p>
+    </div>
+
+    <section class="tarjeta lealtad" id="lealtad" aria-labelledby="t-lealtad">
+      <div class="lealtad-cabeza">
+        <span class="ic ic-acento"><svg class="i"><use href="#i-corazon"/></svg></span>
+        <div>
+          <p class="lealtad-cuenta" id="t-lealtad"><b id="cuenta">2 / 6</b> sellos</p>
+          <p class="lealtad-sub" id="cuenta-sub">para un corte gratis</p>
+        </div>
+      </div>
+      <div class="puntos" id="puntos" role="img" aria-label="2 de 6 sellos"></div>
+      <button class="btn-primario" type="button" data-abre="hoja-tarjeta"><svg class="i"><use href="#i-tarjeta"/></svg>Ver mi tarjeta</button>
+    </section>
+
+    <nav class="acciones" aria-label="Más de la barbería">
+      <button class="renglon" type="button" data-abre="hoja-resena">
+        <span class="ic ic-g"><svg viewBox="0 0 48 48"><use href="#i-g"/></svg></span>
+        <span class="r-cuerpo"><span class="r-titulo">Dejar reseña en Google</span><span class="r-sub">Cuéntale a otros cómo te fue</span></span>
+        <svg class="i chevron"><use href="#i-chevron"/></svg>
+      </button>
+      <button class="renglon" type="button" data-abre="hoja-servicios">
+        <span class="ic ic-ambar"><svg class="i"><use href="#i-tijeras"/></svg></span>
+        <span class="r-cuerpo"><span class="r-titulo">Ver servicios y precios</span><span class="r-sub">5 servicios · desde $120</span></span>
+        <svg class="i chevron"><use href="#i-chevron"/></svg>
+      </button>
+      <button class="renglon" type="button" data-abre="hoja-reservar">
+        <span class="ic ic-verde"><svg class="i"><use href="#i-chat"/></svg></span>
+        <span class="r-cuerpo"><span class="r-titulo">Reservar por WhatsApp</span><span class="r-sub">Aparta tu hora en un mensaje</span></span>
+        <svg class="i chevron"><use href="#i-chevron"/></svg>
+      </button>
+      <button class="renglon" type="button" data-abre="hoja-wifi">
+        <span class="ic ic-azul"><svg class="i"><use href="#i-wifi"/></svg></span>
+        <span class="r-cuerpo"><span class="r-titulo">Conectar al Wi‑Fi</span><span class="r-sub">BarberiaPruebas_Clientes</span></span>
+        <svg class="i chevron"><use href="#i-chevron"/></svg>
+      </button>
+      <button class="renglon" type="button" data-abre="hoja-opinion">
+        <span class="ic ic-violeta"><svg class="i"><use href="#i-anonimo"/></svg></span>
+        <span class="r-cuerpo"><span class="r-titulo">Opinión anónima</span><span class="r-sub">Solo la lee el dueño, sin tu nombre</span></span>
+        <svg class="i chevron"><use href="#i-chevron"/></svg>
+      </button>
+      <button class="renglon" type="button" data-abre="hoja-llegar">
+        <span class="ic ic-cian"><svg class="i"><use href="#i-pin"/></svg></span>
+        <span class="r-cuerpo"><span class="r-titulo">Cómo llegar</span><span class="r-sub">Av. Juárez 128, Centro</span></span>
+        <svg class="i chevron"><use href="#i-chevron"/></svg>
+      </button>
+      <button class="renglon" type="button" data-abre="hoja-instagram">
+        <span class="ic ic-rosa"><svg class="i"><use href="#i-instagram"/></svg></span>
+        <span class="r-cuerpo"><span class="r-titulo">Síguenos en Instagram</span><span class="r-sub">@barberiapruebas</span></span>
+        <svg class="i chevron"><use href="#i-chevron"/></svg>
+      </button>
+    </nav>
+
+    <footer class="pie">Tarjeta digital de Barbería Pruebas</footer>
+  </main>
+</div>
+
+<div class="velo" id="velo" hidden></div>
+
+<!-- Hoja: mi tarjeta -->
+<section class="hoja" id="hoja-tarjeta" role="dialog" aria-modal="true" aria-labelledby="h-tarjeta" tabindex="-1" hidden>
+  <div class="hoja-cabeza"><span class="asa" aria-hidden="true"></span><button class="cerrar" type="button" data-cierra aria-label="Cerrar"><svg class="i"><use href="#i-cerrar"/></svg></button></div>
+  <div class="hoja-cuerpo">
+    <h2 class="h-grande" id="h-tarjeta">Mi tarjeta</h2>
+    <div class="pase" id="pase">
+      <div class="pase-cabeza">
+        <span class="pase-logo" aria-hidden="true"><svg viewBox="0 0 96 96"><use href="#logo-bp"/></svg></span>
+        <div><p class="pase-nombre">Barbería Pruebas</p><p class="pase-tipo">6 sellos · corte gratis</p></div>
+        <span class="pase-num">Nº 0427</span>
+      </div>
+      <div class="sellos" id="sellos"></div>
+      <div aria-live="polite">
+        <p class="pase-pie" id="faltan">Te faltan <b>4</b> para tu corte gratis</p>
+        <div class="premio" id="premio" hidden>
+          <p class="premio-t">¡Tu corte gratis está listo!</p>
+          <p>Enséñale esta pantalla al barbero.</p>
+        </div>
+      </div>
+      <div class="chispas" id="chispas" aria-hidden="true"></div>
+    </div>
+    <div class="tarjeta fila-info">
+      <span class="ic ic-azul"><svg class="i"><use href="#i-nfc"/></svg></span>
+      <p>Acerca tu celular a la placa del mostrador para que te sellen.</p>
+    </div>
+    <button class="btn-primario" type="button" id="btn-wallet"><svg class="i"><use href="#i-wallet"/></svg>Agregar a Wallet</button>
+    <button class="btn-demo" type="button" id="btn-simular">Simular un toque (demo)</button>
+    <h3 class="h-seccion">Tus visitas</h3>
+    <ul class="tarjeta lista" id="historial"></ul>
+    <button class="enlace" type="button" id="btn-cambio">¿Cambiaste de celular?</button>
+  </div>
+</section>
+
+<!-- Hoja: reseña -->
+<section class="hoja" id="hoja-resena" role="dialog" aria-modal="true" aria-labelledby="h-resena" tabindex="-1" hidden>
+  <div class="hoja-cabeza"><span class="asa" aria-hidden="true"></span><button class="cerrar" type="button" data-cierra aria-label="Cerrar"><svg class="i"><use href="#i-cerrar"/></svg></button></div>
+  <div class="hoja-cuerpo">
+    <h2 class="h-grande" id="h-resena">¿Cómo te fue hoy?</h2>
+    <p class="sub-hoja">Toca las estrellas para calificar tu visita.</p>
+    <div class="estrellas" id="estrellas" role="radiogroup" aria-label="Calificación de tu visita">
+      <button class="estrella" type="button" role="radio" aria-checked="false" aria-label="1 estrella" tabindex="0"><svg viewBox="0 0 24 24"><use href="#i-estrella"/></svg></button>
+      <button class="estrella" type="button" role="radio" aria-checked="false" aria-label="2 estrellas" tabindex="-1"><svg viewBox="0 0 24 24"><use href="#i-estrella"/></svg></button>
+      <button class="estrella" type="button" role="radio" aria-checked="false" aria-label="3 estrellas" tabindex="-1"><svg viewBox="0 0 24 24"><use href="#i-estrella"/></svg></button>
+      <button class="estrella" type="button" role="radio" aria-checked="false" aria-label="4 estrellas" tabindex="-1"><svg viewBox="0 0 24 24"><use href="#i-estrella"/></svg></button>
+      <button class="estrella" type="button" role="radio" aria-checked="false" aria-label="5 estrellas" tabindex="-1"><svg viewBox="0 0 24 24"><use href="#i-estrella"/></svg></button>
+    </div>
+    <p class="leyenda" id="leyenda" aria-live="polite"></p>
+    <!-- La misma invitación para 1 que para 5 estrellas. Reseñar no da sellos ni premios. -->
+    <div class="tarjeta invitacion" id="invitacion" hidden>
+      <span class="g-grande"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#i-g"/></svg></span>
+      <h3>¿Nos ayudas contándolo en Google?</h3>
+      <p>Tu reseña ayuda a otras personas a encontrar la barbería. Escribe lo que de verdad pensaste.</p>
+      <button class="btn-primario" type="button" id="btn-google">Abrir Google</button>
+      <p class="letra-fina">Reseñar es voluntario y no da sellos ni premios.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Hoja: servicios -->
+<section class="hoja" id="hoja-servicios" role="dialog" aria-modal="true" aria-labelledby="h-servicios" tabindex="-1" hidden>
+  <div class="hoja-cabeza"><span class="asa" aria-hidden="true"></span><button class="cerrar" type="button" data-cierra aria-label="Cerrar"><svg class="i"><use href="#i-cerrar"/></svg></button></div>
+  <div class="hoja-cuerpo">
+    <h2 class="h-grande" id="h-servicios">Servicios y precios</h2>
+    <p class="sub-hoja">Precios en pesos. Pagas en efectivo o con tarjeta.</p>
+    <ul class="tarjeta lista">
+      <li><span class="r-cuerpo"><span class="r-titulo">Corte clásico</span><span class="meta">Tijera y máquina · 40 min</span></span><span class="precio">$180</span></li>
+      <li><span class="r-cuerpo"><span class="r-titulo">Corte + barba</span><span class="meta">Con toalla caliente · 60 min</span></span><span class="precio">$260</span></li>
+      <li><span class="r-cuerpo"><span class="r-titulo">Barba</span><span class="meta">Perfilado con navaja · 25 min</span></span><span class="precio">$120</span></li>
+      <li><span class="r-cuerpo"><span class="r-titulo">Diseño / fade</span><span class="meta">Degradado a detalle · 50 min</span></span><span class="precio">$220</span></li>
+      <li><span class="r-cuerpo"><span class="r-titulo">Corte niño</span><span class="meta">Hasta 12 años · 30 min</span></span><span class="precio">$150</span></li>
+    </ul>
+    <p class="nota">Cada visita suma un sello cuando tocas la placa del mostrador.</p>
+  </div>
+</section>
+
+<!-- Hoja: reservar -->
+<section class="hoja" id="hoja-reservar" role="dialog" aria-modal="true" aria-labelledby="h-reservar" tabindex="-1" hidden>
+  <div class="hoja-cabeza"><span class="asa" aria-hidden="true"></span><button class="cerrar" type="button" data-cierra aria-label="Cerrar"><svg class="i"><use href="#i-cerrar"/></svg></button></div>
+  <div class="hoja-cuerpo">
+    <div class="pila" id="reserva-form">
+      <h2 class="h-grande" id="h-reservar">Reservar por WhatsApp</h2>
+      <p class="sub-hoja">Elige día y hora. El barbero te confirma por mensaje.</p>
+      <h3 class="h-seccion" id="t-dia">Día</h3>
+      <div class="chips" role="group" aria-labelledby="t-dia" data-grupo="dia">
+        <button class="chip" type="button" data-valor="hoy" aria-pressed="true">Hoy</button>
+        <button class="chip" type="button" data-valor="mañana" aria-pressed="false">Mañana</button>
+        <button class="chip" type="button" data-valor="el sábado" aria-pressed="false">Sáb</button>
+      </div>
+      <h3 class="h-seccion" id="t-hora">Hora</h3>
+      <div class="chips chips-hora" role="group" aria-labelledby="t-hora" data-grupo="hora">
+        <button class="chip" type="button" data-valor="11:00" aria-pressed="false">11:00</button>
+        <button class="chip" type="button" data-valor="12:30" aria-pressed="true">12:30</button>
+        <button class="chip" type="button" data-valor="16:00" aria-pressed="false">16:00</button>
+        <button class="chip" type="button" data-valor="18:30" aria-pressed="false">18:30</button>
+      </div>
+      <div class="chat" aria-label="Vista previa del mensaje">
+        <span class="chat-etiqueta">Mensaje para la barbería</span>
+        <p class="burbuja"><span id="msj">Hola, quiero apartar un corte hoy a las 12:30. ¿Tienen lugar?</span></p>
+      </div>
+      <button class="btn-wa" type="button" id="btn-wa"><svg class="i"><use href="#i-chat"/></svg>Enviar por WhatsApp</button>
+    </div>
+    <div class="exito" id="reserva-ok" tabindex="-1" hidden>
+      <svg class="palomita" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="28"/><path d="M20 33l8 8 16-17"/></svg>
+      <h3>Mensaje listo</h3>
+      <p id="reserva-resumen">En la página real se abre WhatsApp con tu mensaje escrito. Lo envías y el barbero te confirma ahí mismo.</p>
+      <button class="btn-secundario" type="button" id="btn-otra-hora">Elegir otra hora</button>
+    </div>
+  </div>
+</section>
+
+<!-- Hoja: wifi -->
+<section class="hoja" id="hoja-wifi" role="dialog" aria-modal="true" aria-labelledby="h-wifi" tabindex="-1" hidden>
+  <div class="hoja-cabeza"><span class="asa" aria-hidden="true"></span><button class="cerrar" type="button" data-cierra aria-label="Cerrar"><svg class="i"><use href="#i-cerrar"/></svg></button></div>
+  <div class="hoja-cuerpo">
+    <h2 class="h-grande" id="h-wifi">Conectar al Wi‑Fi</h2>
+    <p class="sub-hoja">Para que navegues mientras esperas tu turno.</p>
+    <ul class="tarjeta lista">
+      <li class="dato"><span>Red</span><b>BarberiaPruebas_Clientes</b></li>
+      <li class="dato"><span>Contraseña</span><b><code class="clave" id="wifi-clave">cortes2026</code></b></li>
+      <li class="dato"><span>Seguridad</span><b>WPA2</b></li>
+    </ul>
+    <button class="btn-primario" type="button" id="btn-copiar"><svg class="i" id="copiar-ic"><use href="#i-copiar"/></svg><span id="copiar-txt">Copiar contraseña</span></button>
+    <p class="nota">Abre Ajustes › Wi‑Fi, elige la red y pega la contraseña.</p>
+  </div>
+</section>
+
+<!-- Hoja: opinión anónima -->
+<section class="hoja" id="hoja-opinion" role="dialog" aria-modal="true" aria-labelledby="h-opinion" tabindex="-1" hidden>
+  <div class="hoja-cabeza"><span class="asa" aria-hidden="true"></span><button class="cerrar" type="button" data-cierra aria-label="Cerrar"><svg class="i"><use href="#i-cerrar"/></svg></button></div>
+  <div class="hoja-cuerpo">
+    <form class="pila" id="form-opinion" novalidate>
+      <h2 class="h-grande" id="h-opinion">Opinión anónima</h2>
+      <p class="sub-hoja">Habla con confianza: tu opinión es completamente anónima.</p>
+      <label class="oculto" for="opinion-texto">Tu opinión</label>
+      <textarea class="campo" id="opinion-texto" maxlength="500" placeholder="Cuéntanos qué te gustó o qué podemos mejorar."></textarea>
+      <p class="contador" id="opinion-cuenta" aria-hidden="true">0 / 500</p>
+      <p class="aviso-campo" id="opinion-aviso" role="alert" hidden>Escribe algo o adjunta una foto antes de enviar.</p>
+      <input class="oculto" type="file" id="opinion-foto" accept="image/*" tabindex="-1" aria-hidden="true">
+      <button class="renglon" type="button" id="btn-foto">
+        <span class="ic ic-gris"><svg class="i"><use href="#i-camara"/></svg></span>
+        <span class="r-cuerpo"><span class="r-titulo">Adjuntar foto</span><span class="r-sub">Opcional</span></span>
+        <svg class="i chevron"><use href="#i-chevron"/></svg>
+      </button>
+      <div class="tarjeta miniatura" id="miniatura" hidden>
+        <img id="mini-img" alt="Foto que vas a adjuntar">
+        <span class="r-cuerpo"><span class="r-titulo" id="mini-nombre">foto.jpg</span><span class="r-sub">Va junto con tu opinión</span></span>
+        <button class="enlace" type="button" id="btn-quitar">Quitar</button>
+      </div>
+      <button class="btn-primario" type="submit">Enviar opinión</button>
+      <p class="nota">Tu opinión le llega al dueño más tarde para cuidar tu anonimato.</p>
+    </form>
+    <div class="exito" id="opinion-ok" tabindex="-1" hidden>
+      <svg class="palomita" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="28"/><path d="M20 33l8 8 16-17"/></svg>
+      <h3>Gracias por decírnoslo</h3>
+      <p>Tu opinión le llegará al dueño más tarde, sin tu nombre ni tu número.</p>
+      <button class="btn-secundario" type="button" id="btn-otra">Escribir otra</button>
+    </div>
+  </div>
+</section>
+
+<!-- Hoja: cómo llegar -->
+<section class="hoja" id="hoja-llegar" role="dialog" aria-modal="true" aria-labelledby="h-llegar" tabindex="-1" hidden>
+  <div class="hoja-cabeza"><span class="asa" aria-hidden="true"></span><button class="cerrar" type="button" data-cierra aria-label="Cerrar"><svg class="i"><use href="#i-cerrar"/></svg></button></div>
+  <div class="hoja-cuerpo">
+    <h2 class="h-grande" id="h-llegar">Cómo llegar</h2>
+    <div class="mapa">
+      <svg viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Mapa: la barbería está sobre Avenida Juárez, entre Hidalgo y Morelos, frente al jardín">
+        <rect class="m-tierra" width="320" height="200"/>
+        <rect class="m-parque" x="104" y="130" width="112" height="58" rx="6"/>
+        <g class="m-arbol"><circle cx="122" cy="146" r="6"/><circle cx="140" cy="170" r="7"/><circle cx="170" cy="150" r="6"/><circle cx="196" cy="172" r="7"/><circle cx="202" cy="144" r="5"/></g>
+        <g class="m-borde">
+          <path d="M-10 120H330" stroke-width="20"/><path d="M90 -10V210M230 -10V210" stroke-width="13"/>
+          <path d="M-10 40H330M-10 196H330" stroke-width="10"/><path d="M-10 172 70 -10" stroke-width="9"/>
+        </g>
+        <g class="m-calle">
+          <path d="M-10 120H330" stroke-width="17"/><path d="M90 -10V210M230 -10V210" stroke-width="10"/>
+          <path d="M-10 40H330M-10 196H330" stroke-width="7"/><path d="M-10 172 70 -10" stroke-width="6"/>
+        </g>
+        <text class="m-texto" x="258" y="123.5">Av. Juárez</text>
+        <text class="m-texto" x="96" y="30" transform="rotate(90 96 30)">Hidalgo</text>
+        <text class="m-texto" x="236" y="136" transform="rotate(90 236 136)">Morelos</text>
+        <circle class="m-onda" cx="160" cy="112" r="12"/>
+        <ellipse cx="160" cy="113" rx="7" ry="2.5" fill="#000" opacity=".18"/>
+        <path class="m-pin" d="M160 112s-15-13-15-25a15 15 0 0 1 30 0c0 12-15 25-15 25z"/>
+        <circle cx="160" cy="87" r="5.5" fill="#FFFFFF"/>
+        <rect class="m-etiqueta" x="180" y="70" width="104" height="24" rx="12"/>
+        <text class="m-etiqueta-t" x="232" y="86" text-anchor="middle">Barbería Pruebas</text>
+      </svg>
+    </div>
+    <div class="tarjeta direccion">
+      <span class="ic ic-cian"><svg class="i"><use href="#i-pin"/></svg></span>
+      <span class="r-cuerpo"><span class="r-titulo">Av. Juárez 128, Centro</span><span class="meta">Entre Hidalgo y Morelos, frente al jardín</span></span>
+    </div>
+    <button class="btn-primario" type="button" id="btn-maps"><svg class="i"><use href="#i-flecha"/></svg>Abrir en Maps</button>
+    <h3 class="h-seccion">Horario</h3>
+    <ul class="tarjeta lista horario" id="horario"></ul>
+  </div>
+</section>
+
+<!-- Hoja: Instagram -->
+<section class="hoja" id="hoja-instagram" role="dialog" aria-modal="true" aria-labelledby="h-instagram" tabindex="-1" hidden>
+  <div class="hoja-cabeza"><span class="asa" aria-hidden="true"></span><button class="cerrar" type="button" data-cierra aria-label="Cerrar"><svg class="i"><use href="#i-cerrar"/></svg></button></div>
+  <div class="hoja-cuerpo">
+    <h2 class="h-grande" id="h-instagram">@barberiapruebas</h2>
+    <div class="ig-perfil">
+      <div class="ig-avatar" aria-hidden="true"><span><svg viewBox="0 0 96 96"><use href="#logo-bp"/></svg></span></div>
+      <div class="ig-cifras">
+        <p><b>184</b><span>publicaciones</span></p>
+        <p><b>2,318</b><span>seguidores</span></p>
+        <p><b>312</b><span>seguidos</span></p>
+      </div>
+    </div>
+    <p class="ig-bio"><b>Barbería Pruebas</b>Cortes clásicos y fades en el Centro. Lunes a sábado, de 10 a 8.</p>
+    <button class="btn-primario" type="button" id="btn-seguir">Seguir</button>
+    <div class="ig-rejilla" role="img" aria-label="Seis publicaciones recientes">
+      <div class="f1"><svg class="i"><use href="#i-tijeras"/></svg></div>
+      <div class="f2"></div>
+      <div class="f3"></div>
+      <div class="f4"></div>
+      <div class="f5"><svg class="i"><use href="#i-corazon"/></svg></div>
+      <div class="f6"></div>
+    </div>
+  </div>
+</section>
+
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <span class="toast-ic" id="toast-ic"><svg class="i"><use href="#i-check"/></svg></span>
+  <span id="toast-txt"></span>
+</div>
+
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const raiz = document.documentElement;
+  const app = $('#app');
+  const velo = $('#velo');
+  const movReducido = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const duracion = () => (movReducido.matches ? 220 : 460);
+
+  /* ---------- Toast ---------- */
+  const toast = $('#toast');
+  const toastTxt = $('#toast-txt');
+  const toastIc = $('#toast-ic use');
+  let toastReloj = 0;
+  function avisar(texto, icono = 'i-check') {
+    toastTxt.textContent = texto;
+    toastIc.setAttribute('href', '#' + icono);
+    toast.classList.remove('visible');
+    void toast.offsetWidth;
+    toast.classList.add('visible');
+    clearTimeout(toastReloj);
+    toastReloj = setTimeout(() => toast.classList.remove('visible'), 2400);
+  }
+
+  /* ---------- Hojas ---------- */
+  let abierta = null;
+  let disparador = null;
+  let recorte = null;
+  let turno = 0;
+
+  function zonaVisible() {
+    const r = app.getBoundingClientRect();
+    const arriba = Math.max(0, -r.top);
+    const abajo = Math.max(0, r.bottom - window.innerHeight);
+    return { arriba, abajo, centro: (arriba + (r.height - abajo)) / 2 };
+  }
+
+  function abrir(id, origen) {
+    const hoja = document.getElementById(id);
+    if (!hoja || hoja === abierta) return;
+    if (abierta) cerrar(true);
+    turno++;
+    disparador = origen || document.activeElement;
+    recorte = zonaVisible();
+    app.style.transformOrigin = `50% ${recorte.centro}px`;
+    app.style.clipPath = `inset(${recorte.arriba}px 0 ${recorte.abajo}px 0 round 0px)`;
+    raiz.classList.add('bloqueado');
+    app.inert = true;
+    app.setAttribute('aria-hidden', 'true');
+    velo.hidden = false;
+    hoja.hidden = false;
+    void hoja.offsetHeight;
+    raiz.classList.add('hoja-abierta');
+    hoja.classList.add('abierta');
+    app.style.clipPath = `inset(${recorte.arriba}px 0 ${recorte.abajo}px 0 round 18px)`;
+    abierta = hoja;
+    hoja.querySelector('.hoja-cuerpo').scrollTop = 0;
+    requestAnimationFrame(() => hoja.focus({ preventScroll: true }));
+  }
+
+  function cerrar(inmediato = false) {
+    const hoja = abierta;
+    if (!hoja) return;
+    abierta = null;
+    const mio = ++turno;
+    [hoja, app, velo].forEach(el => el.classList.remove('arrastrando'));
+    void hoja.offsetHeight;
+    hoja.style.transform = '';
+    velo.style.opacity = '';
+    app.style.transform = '';
+    hoja.classList.remove('abierta');
+    raiz.classList.remove('hoja-abierta');
+    if (recorte) app.style.clipPath = `inset(${recorte.arriba}px 0 ${recorte.abajo}px 0 round 0px)`;
+    const fin = () => {
+      if (abierta !== hoja) hoja.hidden = true;
+      if (mio !== turno) return;
+      velo.hidden = true;
+      app.style.clipPath = '';
+      app.style.transformOrigin = '';
+      raiz.classList.remove('bloqueado');
+      app.inert = false;
+      app.removeAttribute('aria-hidden');
+      if (disparador && document.contains(disparador)) disparador.focus({ preventScroll: true });
+      disparador = null;
+    };
+    if (inmediato) fin(); else setTimeout(fin, duracion());
+  }
+
+  $$('[data-abre]').forEach(b => b.addEventListener('click', () => abrir(b.dataset.abre, b)));
+  $$('[data-cierra]').forEach(b => b.addEventListener('click', () => cerrar()));
+  velo.addEventListener('click', () => cerrar());
+
+  document.addEventListener('keydown', e => {
+    if (!abierta) return;
+    if (e.key === 'Escape') { e.preventDefault(); cerrar(); return; }
+    if (e.key !== 'Tab') return;
+    const enfocables = $$('button, [href], input, textarea, select, [tabindex]', abierta)
+      .filter(el => el.tabIndex >= 0 && !el.disabled && el.offsetParent !== null);
+    if (!enfocables.length) return;
+    const primero = enfocables[0];
+    const ultimo = enfocables[enfocables.length - 1];
+    const activo = document.activeElement;
+    if (!abierta.contains(activo) || activo === abierta) {
+      e.preventDefault();
+      (e.shiftKey ? ultimo : primero).focus();
+    } else if (e.shiftKey && activo === primero) {
+      e.preventDefault(); ultimo.focus();
+    } else if (!e.shiftKey && activo === ultimo) {
+      e.preventDefault(); primero.focus();
+    }
+  });
+
+  /* Arrastrar hacia abajo para cerrar */
+  let arrastre = null;
+  $$('.hoja').forEach(hoja => {
+    hoja.addEventListener('pointerdown', e => {
+      if (e.button !== 0 || hoja !== abierta) return;
+      if (!e.target.closest('.hoja-cabeza, .h-grande') || e.target.closest('button')) return;
+      arrastre = { hoja, id: e.pointerId, y0: e.clientY, dy: 0, alto: hoja.offsetHeight, muestras: [[e.timeStamp, e.clientY]] };
+      try { hoja.setPointerCapture(e.pointerId); } catch (err) { /* el puntero ya no está activo */ }
+      [hoja, app, velo].forEach(el => el.classList.add('arrastrando'));
+      e.preventDefault();
+    });
+    hoja.addEventListener('pointermove', e => {
+      if (!arrastre || e.pointerId !== arrastre.id) return;
+      let dy = e.clientY - arrastre.y0;
+      if (dy < 0) dy = -Math.min(22, Math.pow(-dy, 0.7));
+      arrastre.dy = dy;
+      arrastre.muestras.push([e.timeStamp, e.clientY]);
+      if (arrastre.muestras.length > 8) arrastre.muestras.shift();
+      arrastre.hoja.style.transform = `translateY(${dy}px)`;
+      const p = Math.max(0, Math.min(1, dy / arrastre.alto));
+      velo.style.opacity = String(1 - p);
+      if (!movReducido.matches) app.style.transform = `scale(${0.94 + 0.06 * p})`;
+    });
+    const soltar = e => {
+      if (!arrastre || e.pointerId !== arrastre.id) return;
+      const { dy, alto, muestras } = arrastre;
+      arrastre = null;
+      const ultima = muestras[muestras.length - 1];
+      const base = muestras.find(m => m[0] >= ultima[0] - 100) || muestras[0];
+      const velocidad = (ultima[1] - base[1]) / Math.max(1, ultima[0] - base[0]);
+      if (dy > alto * 0.3 || (velocidad > 0.55 && dy > 12)) {
+        cerrar();
+      } else {
+        [hoja, app, velo].forEach(el => el.classList.remove('arrastrando'));
+        void hoja.offsetHeight;
+        hoja.style.transform = '';
+        velo.style.opacity = '';
+        app.style.transform = '';
+      }
+    };
+    hoja.addEventListener('pointerup', soltar);
+    hoja.addEventListener('pointercancel', soltar);
+  });
+
+  /* ---------- Tarjeta de lealtad ---------- */
+  const META = 6;
+  const INICIALES = 2;
+  const VISITAS_BASE = [
+    { t: 'Sello con la placa', f: 'Sáb 13 sep · 11:42' },
+    { t: 'Sello con la placa', f: 'Vie 29 ago · 17:05' }
+  ];
+  let sellos = INICIALES;
+  let visitas = VISITAS_BASE.slice();
+
+  const puntos = $('#puntos');
+  const rejilla = $('#sellos');
+  for (let i = 0; i < META; i++) {
+    const p = document.createElement('span');
+    p.className = 'punto';
+    puntos.appendChild(p);
+    const s = document.createElement('div');
+    s.className = 'sello';
+    s.setAttribute('role', 'img');
+    const marca = i === META - 1
+      ? '<svg class="i tijera" aria-hidden="true"><use href="#i-tijeras"/></svg>'
+      : `<span class="num" aria-hidden="true">${i + 1}</span>`;
+    s.innerHTML = marca + '<svg class="i palomita-s" aria-hidden="true"><use href="#i-check"/></svg>';
+    rejilla.appendChild(s);
+  }
+
+  function pintar(nuevo = -1) {
+    const completa = sellos >= META;
+    $$('.punto', puntos).forEach((p, i) => {
+      p.classList.toggle('lleno', i < sellos);
+      p.classList.toggle('nuevo', i === nuevo);
+    });
+    puntos.setAttribute('aria-label', `${sellos} de ${META} sellos`);
+    $('#cuenta').textContent = `${sellos} / ${META}`;
+    $('#cuenta-sub').textContent = completa ? 'Tu corte gratis está listo' : 'para un corte gratis';
+    $('#lealtad').classList.toggle('completa', completa);
+    $$('.sello', rejilla).forEach((s, i) => {
+      s.classList.toggle('lleno', i < sellos);
+      s.classList.toggle('nuevo', i === nuevo);
+      const premio = i === META - 1 ? ' (corte gratis)' : '';
+      s.setAttribute('aria-label', `Sello ${i + 1}${premio}: ${i < sellos ? 'marcado' : 'pendiente'}`);
+    });
+    const faltan = META - sellos;
+    const faltanEl = $('#faltan');
+    faltanEl.innerHTML = faltan === 1
+      ? 'Te falta <b>1</b> para tu corte gratis'
+      : `Te faltan <b>${faltan}</b> para tu corte gratis`;
+    faltanEl.hidden = completa;
+    $('#premio').hidden = !completa;
+    $('#btn-simular').textContent = completa ? 'Reiniciar la demo' : 'Simular un toque (demo)';
+    const lista = $('#historial');
+    lista.textContent = '';
+    visitas.forEach(v => {
+      const li = document.createElement('li');
+      li.innerHTML = '<span class="ic-mini"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg></span><span class="r-cuerpo"><span class="r-titulo"></span><span class="meta"></span></span><span class="mas">+1</span>';
+      li.querySelector('.r-titulo').textContent = v.t;
+      li.querySelector('.meta').textContent = v.f;
+      lista.appendChild(li);
+    });
+  }
+
+  function celebrar() {
+    const pase = $('#pase');
+    pase.classList.remove('celebra');
+    void pase.offsetWidth;
+    pase.classList.add('celebra');
+    const caja = $('#chispas');
+    caja.textContent = '';
+    const colores = ['#D9503C', '#C9A36A', '#F4ECE2', '#E9B949'];
+    for (let i = 0; i < 18; i++) {
+      const c = document.createElement('i');
+      const ang = (i / 18) * Math.PI * 2 + Math.random() * 0.3;
+      const dist = 90 + Math.random() * 70;
+      c.style.setProperty('--x', `${Math.cos(ang) * dist}px`);
+      c.style.setProperty('--y', `${Math.sin(ang) * dist * 0.75 - 20}px`);
+      c.style.setProperty('--r', `${Math.round(Math.random() * 360)}deg`);
+      c.style.setProperty('--d', `${Math.round(Math.random() * 120)}ms`);
+      c.style.setProperty('--c', colores[i % colores.length]);
+      if (i % 3 === 0) c.style.borderRadius = '50%';
+      caja.appendChild(c);
+    }
+    setTimeout(() => { caja.textContent = ''; }, 1600);
+  }
+
+  $('#btn-simular').addEventListener('click', () => {
+    if (sellos >= META) {
+      sellos = INICIALES;
+      visitas = VISITAS_BASE.slice();
+      pintar();
+      avisar('Demo reiniciada: 2 de 6 sellos', 'i-info');
+      return;
+    }
+    sellos++;
+    const ahora = new Date();
+    const hora = ahora.toLocaleTimeString('es-MX', { hour: 'numeric', minute: '2-digit' });
+    visitas.unshift({ t: 'Sello con la placa', f: `Hoy · ${hora}` });
+    pintar(sellos - 1);
+    try { if (navigator.vibrate) navigator.vibrate(12); } catch (err) { /* sin vibración */ }
+    if (sellos >= META) {
+      celebrar();
+      avisar('¡Completaste tu tarjeta!');
+    } else {
+      avisar(`Sello ${sellos} de ${META}`);
+    }
+  });
+  $('#btn-wallet').addEventListener('click', () => avisar('Esto agregaría tu tarjeta a Wallet', 'i-info'));
+  $('#btn-cambio').addEventListener('click', () => avisar('Pide tu código en el mostrador para pasar tu tarjeta', 'i-info'));
+
+  /* ---------- Reseña ---------- */
+  const estrellas = $$('.estrella');
+  const LEYENDAS = ['Mal', 'Regular', 'Bien', 'Muy bien', 'Excelente'];
+  let calificacion = 0;
+  function calificar(n, enfocar) {
+    calificacion = n;
+    estrellas.forEach((b, i) => {
+      b.classList.toggle('on', i < n);
+      b.classList.remove('pop');
+      b.setAttribute('aria-checked', String(i === n - 1));
+      b.tabIndex = i === n - 1 ? 0 : -1;
+    });
+    const elegida = estrellas[n - 1];
+    void elegida.offsetWidth;
+    elegida.classList.add('pop');
+    $('#leyenda').textContent = `${LEYENDAS[n - 1]} · ${n} de 5`;
+    $('#invitacion').hidden = false; // misma invitación para cualquier calificación
+    if (enfocar) elegida.focus();
+  }
+  estrellas.forEach((b, i) => {
+    b.addEventListener('click', () => calificar(i + 1, false));
+    b.addEventListener('keydown', e => {
+      const actual = calificacion || 1;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowUp') { e.preventDefault(); calificar(Math.min(5, actual + (calificacion ? 1 : 0)), true); }
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') { e.preventDefault(); calificar(Math.max(1, actual - 1), true); }
+    });
+  });
+  $('#btn-google').addEventListener('click', () => avisar('Esto abriría Google', 'i-info'));
+
+  /* ---------- Reservar ---------- */
+  const eleccion = { dia: 'hoy', hora: '12:30' };
+  function mensaje() {
+    return `Hola, quiero apartar un corte ${eleccion.dia} a las ${eleccion.hora}. ¿Tienen lugar?`;
+  }
+  $$('.chips[data-grupo]').forEach(grupo => {
+    grupo.addEventListener('click', e => {
+      const chip = e.target.closest('.chip');
+      if (!chip) return;
+      $$('.chip', grupo).forEach(c => c.setAttribute('aria-pressed', String(c === chip)));
+      eleccion[grupo.dataset.grupo] = chip.dataset.valor;
+      $('#msj').textContent = mensaje();
+    });
+  });
+  $('#btn-wa').addEventListener('click', () => {
+    $('#reserva-form').hidden = true;
+    const ok = $('#reserva-ok');
+    ok.hidden = false;
+    ok.focus({ preventScroll: true });
+  });
+  $('#btn-otra-hora').addEventListener('click', () => {
+    $('#reserva-ok').hidden = true;
+    $('#reserva-form').hidden = false;
+    $('#btn-wa').focus({ preventScroll: true });
+  });
+
+  /* ---------- Wi-Fi ---------- */
+  let copiarReloj = 0;
+  $('#btn-copiar').addEventListener('click', () => {
+    const boton = $('#btn-copiar');
+    const clave = $('#wifi-clave').textContent;
+    const listo = () => {
+      boton.classList.add('hecho');
+      $('#copiar-ic').style.display = 'none';
+      $('#copiar-txt').textContent = 'Copiada ✓';
+      clearTimeout(copiarReloj);
+      copiarReloj = setTimeout(() => {
+        boton.classList.remove('hecho');
+        $('#copiar-ic').style.display = '';
+        $('#copiar-txt').textContent = 'Copiar contraseña';
+      }, 2200);
+    };
+    const seleccionar = () => {
+      const rango = document.createRange();
+      rango.selectNodeContents($('#wifi-clave'));
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(rango);
+      avisar('La dejé seleccionada: cópiala desde el menú', 'i-info');
+    };
+    try {
+      const promesa = navigator.clipboard && navigator.clipboard.writeText(clave);
+      if (!promesa) { seleccionar(); return; }
+      promesa.then(listo, seleccionar);
+    } catch (err) {
+      seleccionar();
+    }
+  });
+
+  /* ---------- Opinión anónima ---------- */
+  const texto = $('#opinion-texto');
+  const entradaFoto = $('#opinion-foto');
+  let hayFoto = false;
+  texto.addEventListener('input', () => {
+    $('#opinion-cuenta').textContent = `${texto.value.length} / 500`;
+    if (texto.value.trim()) $('#opinion-aviso').hidden = true;
+  });
+  $('#btn-foto').addEventListener('click', () => entradaFoto.click());
+  entradaFoto.addEventListener('change', () => {
+    const archivo = entradaFoto.files && entradaFoto.files[0];
+    if (!archivo) return;
+    if (!archivo.type.startsWith('image/')) { avisar('Elige una imagen (JPG, PNG o HEIC)', 'i-info'); entradaFoto.value = ''; return; }
+    const lector = new FileReader();
+    lector.onload = () => {
+      $('#mini-img').src = lector.result;
+      $('#mini-nombre').textContent = archivo.name;
+      $('#miniatura').hidden = false;
+      $('#btn-foto').hidden = true;
+      $('#opinion-aviso').hidden = true;
+      hayFoto = true;
+    };
+    lector.readAsDataURL(archivo);
+  });
+  function quitarFoto() {
+    hayFoto = false;
+    entradaFoto.value = '';
+    $('#mini-img').removeAttribute('src');
+    $('#miniatura').hidden = true;
+    $('#btn-foto').hidden = false;
+  }
+  $('#btn-quitar').addEventListener('click', () => { quitarFoto(); $('#btn-foto').focus(); });
+  $('#form-opinion').addEventListener('submit', e => {
+    e.preventDefault();
+    if (!texto.value.trim() && !hayFoto) {
+      $('#opinion-aviso').hidden = false;
+      texto.classList.remove('sacude');
+      void texto.offsetWidth;
+      texto.classList.add('sacude');
+      texto.focus();
+      return;
+    }
+    $('#form-opinion').hidden = true;
+    const ok = $('#opinion-ok');
+    ok.hidden = false;
+    ok.focus({ preventScroll: true });
+  });
+  $('#btn-otra').addEventListener('click', () => {
+    texto.value = '';
+    $('#opinion-cuenta').textContent = '0 / 500';
+    quitarFoto();
+    $('#opinion-ok').hidden = true;
+    $('#form-opinion').hidden = false;
+    texto.focus();
+  });
+
+  /* ---------- Cómo llegar ---------- */
+  const HORARIO = [
+    ['Lunes', '10:00 – 20:00'], ['Martes', '10:00 – 20:00'], ['Miércoles', '10:00 – 20:00'],
+    ['Jueves', '10:00 – 20:00'], ['Viernes', '10:00 – 20:00'], ['Sábado', '10:00 – 20:00'], ['Domingo', 'Cerrado']
+  ];
+  const hoy = (new Date().getDay() + 6) % 7;
+  HORARIO.forEach(([dia, hora], i) => {
+    const li = document.createElement('li');
+    if (i === hoy) li.className = 'hoy';
+    li.innerHTML = '<span class="h-dia"></span><span class="h-hora"></span>';
+    li.querySelector('.h-dia').textContent = dia;
+    li.querySelector('.h-hora').textContent = hora;
+    if (i === hoy) {
+      const b = document.createElement('span');
+      b.className = 'insignia';
+      b.textContent = 'Hoy';
+      li.querySelector('.h-dia').appendChild(b);
+    }
+    $('#horario').appendChild(li);
+  });
+  $('#btn-maps').addEventListener('click', () => avisar('Esto abriría Maps', 'i-info'));
+
+  /* ---------- Instagram ---------- */
+  $('#btn-seguir').addEventListener('click', () => avisar('Esto abriría Instagram', 'i-info'));
+
+  pintar();
+})();
+</script>
