@@ -1,0 +1,728 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mi página</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* El panel del dueño con la marca del local: ajustes a la izquierda, el teléfono con la
+   vista previa en vivo a la derecha. En un celular se alterna entre los dos.
+   Tema oscuro fijo a propósito: es el del local (fondo "nocturno"), como el panel real. */
+:root{
+  color-scheme:dark;
+  --ac:#D9503C; --acx:#20150A;
+  --tinta:#FFFFFF; --tinta2:rgba(255,255,255,.70); --tinta3:rgba(255,255,255,.52);
+  --gl:rgba(255,255,255,.09); --glf:rgba(255,255,255,.17); --hi:rgba(255,255,255,.42); --bl:17px;
+  --linea:rgba(255,255,255,.20); --linea2:rgba(255,255,255,.13);
+  --sol:color-mix(in srgb, var(--ac) 6%, #14181B); --sol2:color-mix(in srgb, var(--ac) 9%, #1B2126);
+  --ok:#6FCE9C; --alerta:#E0AE52; --oks:rgba(111,206,156,.18); --alertas:rgba(224,174,82,.18);
+  --bg:#07100F;
+  --fondo:radial-gradient(110% 80% at 12% 5%, #124A50 0%, rgba(18,74,80,0) 55%),
+          radial-gradient(90% 70% at 88% 25%, #1E6E5A 0%, rgba(30,110,90,0) 50%),
+          linear-gradient(160deg, #0C2226, #07100F);
+  --velo:linear-gradient(180deg,rgba(0,0,0,.20),rgba(0,0,0,.32) 45%,rgba(0,0,0,.58));
+  --ui:"Archivo","Segoe UI",system-ui,sans-serif;
+  --dp:"Bricolage Grotesque","Archivo",system-ui,sans-serif;
+  --mo:"IBM Plex Mono",ui-monospace,monospace;
+  --ios:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",system-ui,sans-serif;
+  --resorte:cubic-bezier(.32,.72,0,1);
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{background:var(--bg);color:var(--tinta);font-family:var(--ui);font-size:15px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;position:relative;overflow-x:hidden}
+a{color:var(--ac)}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.fondo{position:fixed;inset:0;z-index:-3;background:var(--fondo)}
+.velo{position:fixed;inset:0;z-index:-2;background:var(--velo)}
+.grano{position:fixed;inset:0;z-index:-1;opacity:.22;mix-blend-mode:overlay;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E")}
+.vidrio,.caja,.cab{background:var(--gl);
+  -webkit-backdrop-filter:blur(var(--bl)) saturate(165%);backdrop-filter:blur(var(--bl)) saturate(165%)}
+
+/* ---------- Encabezado del panel (igual al real) ---------- */
+.cab{position:sticky;top:0;z-index:20;border-bottom:1px solid var(--linea)}
+.top{display:flex;align-items:center;gap:14px;padding:9px 18px;min-height:54px;flex-wrap:wrap}
+.top .neg{font-family:var(--dp);font-weight:800;font-size:17px;letter-spacing:-.02em;white-space:nowrap}
+.top .esp{flex:1}
+.top .yo{font-size:12.5px;color:var(--tinta2);white-space:nowrap}
+.top .yo a{color:var(--tinta3);margin-left:10px}
+nav{display:flex;gap:2px;overflow-x:auto;padding:0 18px;border-top:1px solid var(--linea2);scrollbar-width:none}
+nav a{padding:11px 13px;font-size:13.5px;font-weight:500;color:var(--tinta2);text-decoration:none;
+  border-bottom:2px solid transparent;white-space:nowrap}
+nav a[aria-current="page"]{color:var(--tinta);border-bottom-color:var(--ac);font-weight:600}
+nav a .nuevo{font-family:var(--mo);font-size:9px;letter-spacing:.08em;background:var(--ac);color:var(--acx);
+  padding:1px 6px;border-radius:100px;margin-left:6px;vertical-align:1px}
+
+main{max-width:1080px;margin:0 auto;padding:22px 18px 120px}
+.maqueta{display:inline-flex;align-items:center;gap:8px;font-family:var(--mo);font-size:10.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--alerta);background:var(--alertas);padding:5px 11px;border-radius:100px;margin-bottom:14px}
+h1{font-family:var(--dp);font-weight:700;font-size:25px;letter-spacing:-.025em;margin:0 0 4px;text-shadow:0 2px 16px rgba(0,0,0,.28)}
+h1 + p{margin:0 0 20px;color:var(--tinta2);font-size:14px;max-width:62ch}
+
+/* Alternar ajustes / vista previa: solo en pantallas angostas */
+.alterna{display:none;grid-template-columns:1fr 1fr;padding:3px;border-radius:12px;background:var(--sol2);
+  border:1px solid var(--linea2);margin-bottom:16px;position:sticky;top:104px;z-index:5}
+.alterna button{font:600 13.5px var(--ui);color:var(--tinta2);background:none;border:0;padding:9px;border-radius:9px;cursor:pointer}
+.alterna button[aria-pressed="true"]{background:var(--glf);color:var(--tinta);box-shadow:inset 0 1px 0 var(--hi)}
+
+.rejilla{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:26px;align-items:start}
+.ajustes{display:grid;gap:14px;min-width:0}
+.caja{border:1px solid var(--linea);border-radius:16px;padding:17px;
+  box-shadow:inset 0 1px 0 var(--hi),0 10px 30px -16px rgba(0,0,0,.5)}
+.caja > h2{margin:0 0 3px;font-size:15px;font-weight:600;font-family:var(--ui);display:flex;align-items:center;gap:8px}
+.caja > .sub{margin:0 0 14px;font-size:12.5px;color:var(--tinta2);line-height:1.45}
+.et{font-family:var(--mo);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--tinta3);margin:14px 0 7px;display:block}
+
+/* Opciones elegibles (tema, portada): lámina sólida, marco del acento al elegir */
+.opciones{display:grid;gap:10px}
+.opciones.dos{grid-template-columns:1fr 1fr}
+.opciones.portadas{grid-template-columns:repeat(auto-fill,minmax(132px,1fr))}
+.opc{position:relative;display:flex;flex-direction:column;gap:7px;padding:7px 7px 9px;border-radius:14px;
+  background:var(--sol);border:1px solid var(--linea2);color:var(--tinta);font:inherit;text-align:left;cursor:pointer;
+  transition:border-color .18s,transform .18s var(--resorte)}
+.opc:active{transform:scale(.97)}
+.opc[aria-checked="true"]{border-color:var(--ac);box-shadow:0 0 0 1px var(--ac)}
+.opc[aria-checked="true"]::after{content:"";position:absolute;top:12px;right:12px;width:20px;height:20px;border-radius:50%;
+  background:var(--ac) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2320150A' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/13px no-repeat;
+  box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.opc .mini{border-radius:9px;overflow:hidden;aspect-ratio:16/9;max-width:100%;position:relative;background:#111}
+.opc .mini svg,.opc .mini img{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover}
+.opc .n{font-weight:600;font-size:13.5px;padding:0 3px;line-height:1.2}
+.opc .d{font-size:11.5px;color:var(--tinta2);padding:0 3px;line-height:1.35;margin-top:-4px}
+.opc.subir .mini,.opc.medida .mini{display:grid;place-items:center;background:var(--sol2);border:1.5px dashed var(--linea)}
+.opc.subir .mini svg,.opc.medida .mini svg{position:static;width:26px;height:26px;fill:none;stroke:var(--tinta2);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.opc.medida .mini{border-style:solid;border-color:transparent;
+  background:radial-gradient(90% 120% at 100% 0%,color-mix(in srgb,var(--ac) 45%,transparent),transparent 65%),var(--sol2)}
+.opc.medida .mini svg{stroke:var(--tinta)}
+.pastilla{display:inline-flex;align-items:center;gap:5px;font-family:var(--mo);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;
+  padding:3px 8px;border-radius:100px;white-space:nowrap;font-weight:600}
+.pastilla.costo{background:var(--ac);color:var(--acx)}
+.pastilla.ok{color:var(--ok);background:var(--oks)}
+.pastilla.al{color:var(--alerta);background:var(--alertas)}
+
+/* Miniatura de tema */
+.mtema{position:absolute;inset:0;display:grid;grid-template-rows:42% 1fr}
+.mtema .a{background:linear-gradient(160deg,#3A2A20,#15100C)}
+.mtema .b{padding:0 10% 8%;display:grid;align-content:start;gap:6%;margin-top:-6%;border-radius:10px 10px 0 0}
+.mtema i{display:block;border-radius:5px;height:14%}
+.mtema.ios .b{background:#F2F4F7}
+.mtema.ios i{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.mtema.ios i.btn{background:#0B0B0D;height:11%}
+.mtema.vid .a{background:linear-gradient(160deg,#15464A,#0B2124)}
+.mtema.vid .b{background:linear-gradient(#0E2A2D,#07100F)}
+.mtema.vid i{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22)}
+.mtema.vid i.btn{background:var(--ac);border-color:var(--ac);height:11%}
+
+/* Color */
+.muestras{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+.muestra{width:38px;height:38px;border-radius:50%;border:2px solid transparent;padding:0;cursor:pointer;position:relative;
+  background:var(--m);box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)}
+.muestra[aria-checked="true"]{border-color:var(--tinta);box-shadow:0 0 0 2px var(--bg),inset 0 0 0 1px rgba(255,255,255,.2)}
+.muestra.otro{background:conic-gradient(#E6533C,#E8B634,#3FAE68,#2F7DE1,#8E54E0,#E0468A,#E6533C);overflow:hidden}
+.muestra.otro input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;border:0;padding:0}
+.contraste{display:flex;gap:10px;align-items:flex-start;margin-top:13px;padding:11px 13px;border-radius:12px;background:var(--sol);
+  border:1px solid var(--linea2);font-size:12.5px;line-height:1.45;color:var(--tinta2)}
+.contraste b{color:var(--tinta);font-weight:600}
+.contraste .c{flex:none;width:18px;height:18px;border-radius:50%;background:var(--cc);margin-top:1px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
+
+/* Campos */
+.campo{display:grid;gap:6px}
+input[type=text],textarea{width:100%;min-width:0;background:var(--sol);border:1px solid var(--linea2);color:var(--tinta);
+  border-radius:11px;padding:11px 12px;font:inherit;font-size:16px;line-height:1.4}
+textarea{resize:vertical;min-height:74px}
+input[type=text]:focus,textarea:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 28%,transparent)}
+.cuenta-car{font-family:var(--mo);font-size:10.5px;color:var(--tinta3);text-align:right}
+.logo-fila{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.logo-vista{width:58px;height:58px;border-radius:50%;flex:none;display:grid;place-items:center;overflow:hidden;
+  background:radial-gradient(circle at 32% 26%,#1F5E60,#0B2225 72%);border:2px solid var(--linea);
+  font-family:var(--dp);font-weight:800;font-size:20px;letter-spacing:-.04em}
+.logo-vista img{width:100%;height:100%;object-fit:cover}
+.botones{display:flex;gap:8px;flex-wrap:wrap}
+.btn{font:inherit;font-size:13px;font-weight:600;padding:9px 14px;border-radius:10px;border:1px solid var(--linea);
+  background:var(--gl);color:var(--tinta);cursor:pointer;display:inline-flex;align-items:center;gap:7px;white-space:nowrap;
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.btn:hover{background:var(--glf)}
+.btn.pri{background:var(--ac);border-color:var(--ac);color:var(--acx)}
+.btn.pri:hover{background:var(--ac);filter:brightness(1.06)}
+label.btn input{position:absolute;width:1px;height:1px;opacity:0}
+label.btn:focus-within{outline:2px solid var(--ac);outline-offset:2px}
+
+/* Interruptores de botones */
+.lista{display:grid}
+.sw{display:flex;align-items:center;gap:12px;padding:11px 2px;border-bottom:1px solid var(--linea2);cursor:pointer}
+.sw:last-child{border-bottom:0}
+.sw .ico{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:var(--sol2);border:1px solid var(--linea2);flex:none}
+.sw .ico svg{width:16px;height:16px;fill:none;stroke:var(--ac);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.sw .tt{flex:1;min-width:0}
+.sw .t{font-weight:600;font-size:14px}
+.sw .s{font-size:12px;color:var(--tinta2)}
+.sw input{position:absolute;opacity:0;width:1px;height:1px}
+.sw .pal{flex:none;width:44px;height:26px;border-radius:100px;background:var(--sol2);border:1px solid var(--linea);position:relative;transition:background .2s}
+.sw .pal::after{content:"";position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:var(--tinta2);transition:transform .25s var(--resorte),background .2s}
+.sw input:checked + .pal{background:var(--ac);border-color:var(--ac)}
+.sw input:checked + .pal::after{transform:translateX(18px);background:var(--acx)}
+.sw input:focus-visible + .pal{outline:2px solid var(--ac);outline-offset:2px}
+.sw.fijo{cursor:default}
+.sw.fijo .pal{opacity:.55}
+
+/* ---------- Vista previa: el teléfono ---------- */
+.previa{position:sticky;top:120px;display:grid;justify-items:center;gap:10px}
+.previa .leyenda{font-family:var(--mo);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--tinta3)}
+.tel{width:320px;max-width:100%;height:640px;border-radius:44px;padding:10px;background:#050707;
+  box-shadow:0 0 0 1px rgba(255,255,255,.14),0 40px 80px -30px rgba(0,0,0,.9),inset 0 0 0 2px #1a1d1f;position:relative}
+.tel::before{content:"";position:absolute;top:18px;left:50%;width:84px;height:24px;margin-left:-42px;border-radius:20px;background:#000;z-index:3}
+.pant{height:100%;border-radius:35px;overflow:hidden;overflow-y:auto;scrollbar-width:none;position:relative;
+  background:var(--p-bg);color:var(--p-tx);font-family:var(--p-font);transition:background-color .35s}
+.pant::-webkit-scrollbar{display:none}
+
+/* Tokens de cada tema de la página pública */
+.pant[data-tema="ios"]{--p-bg:#F2F4F7;--p-tx:#0B0C0F;--p-tx2:#5E6572;--p-card:#FFFFFF;--p-borde:rgba(20,28,45,.06);
+  --p-sombra:0 1px 2px rgba(16,24,40,.04),0 6px 18px rgba(16,24,40,.05);--p-font:var(--ios);--p-btn:#0B0B0D;--p-btnx:#fff;--p-anillo:#fff}
+.pant[data-tema="vidrio"]{--p-bg:#07100F;--p-tx:#fff;--p-tx2:rgba(255,255,255,.70);--p-card:rgba(255,255,255,.09);--p-borde:rgba(255,255,255,.20);
+  --p-sombra:inset 0 1px 0 rgba(255,255,255,.42),0 10px 30px -14px rgba(0,0,0,.55);--p-font:var(--ui);--p-btn:var(--pac);--p-btnx:var(--pacx);--p-anillo:rgba(255,255,255,.17)}
+.pant[data-tema="vidrio"]::before{content:"";position:absolute;inset:0;background:var(--fondo);z-index:0}
+.p-portada{position:relative;height:190px;overflow:hidden;z-index:1}
+.p-portada svg,.p-portada img{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover}
+.p-portada .p-velo{position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,.30),rgba(0,0,0,0) 35%,rgba(0,0,0,.25))}
+.pant[data-tema="vidrio"] .p-portada{-webkit-mask-image:linear-gradient(#000 60%,transparent);mask-image:linear-gradient(#000 60%,transparent)}
+.p-hoja{position:relative;z-index:1;margin-top:-22px;border-radius:22px 22px 0 0;padding:0 14px 26px;background:var(--p-bg);display:grid;gap:12px}
+.pant[data-tema="vidrio"] .p-hoja{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-bottom:0;
+  -webkit-backdrop-filter:blur(17px) saturate(165%);backdrop-filter:blur(17px) saturate(165%);box-shadow:inset 0 1px 0 rgba(255,255,255,.35)}
+.p-logo{width:74px;height:74px;border-radius:50%;margin-top:-37px;display:grid;place-items:center;overflow:hidden;
+  border:3px solid var(--p-anillo);background:radial-gradient(circle at 32% 26%,#2a1f19,#120d0b 72%);color:#F4E9D8;
+  font-family:var(--dp);font-weight:800;font-size:25px;letter-spacing:-.04em;box-shadow:0 10px 22px -10px rgba(0,0,0,.6)}
+.pant[data-tema="vidrio"] .p-logo{background:radial-gradient(circle at 32% 26%,#1F5E60,#0B2225 72%);color:#fff}
+.p-logo img{width:100%;height:100%;object-fit:cover}
+.p-logo b{color:var(--pac);font-weight:800}
+.p-id{display:grid;gap:3px;margin-top:-4px}
+.p-nombre{font-weight:700;font-size:22px;letter-spacing:-.025em;line-height:1.1;overflow-wrap:anywhere}
+.pant[data-tema="vidrio"] .p-nombre{font-family:var(--dp);font-weight:800}
+.p-estado{font-size:12.5px;color:var(--p-tx2);display:flex;align-items:center;gap:6px}
+.p-estado i{width:6px;height:6px;border-radius:50%;background:#22A157}
+.p-bienv{margin:2px 0 0;font-size:12.5px;color:var(--p-tx2);line-height:1.45;overflow-wrap:anywhere}
+.p-card{background:var(--p-card);border:1px solid var(--p-borde);border-radius:16px;box-shadow:var(--p-sombra)}
+.pant[data-tema="vidrio"] .p-card{-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.p-tarj{padding:13px;display:grid;gap:11px}
+.p-tarj .enc{display:flex;align-items:center;gap:10px}
+.p-ic{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;flex:none;background:var(--pacs)}
+.p-ic svg{width:16px;height:16px;fill:none;stroke:var(--pact);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.p-ic svg.lleno{fill:var(--pact);stroke:none}
+.p-tarj .num{font-weight:600;font-size:15px}
+.p-tarj .num b{font-size:18px}
+.p-tarj .sub{font-size:12px;color:var(--p-tx2)}
+.p-puntos{display:flex;gap:6px}
+.p-puntos i{width:17px;height:17px;border-radius:50%;border:1.5px solid var(--p-borde);box-shadow:inset 0 0 0 1px rgba(128,128,128,.25)}
+.p-puntos i.on{background:var(--pac);border-color:var(--pac);box-shadow:none}
+.p-btn{height:40px;border-radius:12px;display:grid;place-items:center;font-weight:600;font-size:14px;background:var(--p-btn);color:var(--p-btnx)}
+.p-rows{display:grid;gap:8px}
+.p-row{display:flex;align-items:center;gap:11px;padding:9px 11px 9px 9px;animation:entra .3s var(--resorte)}
+.p-row .t{flex:1;min-width:0;font-weight:500;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.p-row .fl{width:14px;height:14px;fill:none;stroke:var(--p-tx2);stroke-width:2;opacity:.6}
+.pant[data-tema="ios"] .p-row .p-ic{background:var(--pc)}
+.pant[data-tema="ios"] .p-row .p-ic svg{stroke:var(--pci)}
+.pant[data-tema="vidrio"] .p-row .p-ic{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2)}
+.p-pie{text-align:center;font-size:11px;color:var(--p-tx2);padding-top:4px}
+@keyframes entra{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+
+/* ---------- Barra de guardar ---------- */
+.guardar{position:fixed;left:0;right:0;bottom:0;z-index:30;padding:12px 18px calc(12px + env(safe-area-inset-bottom,0px));
+  display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;
+  background:rgba(8,20,20,.82);border-top:1px solid var(--linea);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);
+  transform:translateY(110%);transition:transform .4s var(--resorte)}
+.guardar.ve{transform:none}
+.guardar .txt{font-size:13.5px;color:var(--tinta2);display:flex;align-items:center;gap:8px}
+.guardar .txt::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--alerta)}
+
+/* ---------- Pedido de portada a la medida ---------- */
+dialog{border:1px solid var(--linea);border-radius:22px;padding:0;width:min(520px,calc(100% - 24px));max-height:calc(100% - 40px);
+  background:#0D1F21;color:var(--tinta);box-shadow:0 40px 90px -30px rgba(0,0,0,.9)}
+dialog::backdrop{background:rgba(2,8,8,.6);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+dialog[open]{animation:sube .4s var(--resorte)}
+@keyframes sube{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
+.dlg{padding:20px;display:grid;gap:14px}
+.dlg h2{font-family:var(--dp);font-weight:800;font-size:22px;letter-spacing:-.03em;margin:0;padding-right:36px}
+.dlg p{margin:0;font-size:13.5px;color:var(--tinta2);line-height:1.5}
+.dlg .cerrar{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;padding:0;display:grid;place-items:center;
+  border:1px solid var(--linea);background:var(--glf);color:var(--tinta);cursor:pointer}
+.dlg .cerrar svg{width:14px;height:14px;stroke:currentColor;stroke-width:2.2;fill:none;stroke-linecap:round}
+.incluye{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.incluye li{display:flex;gap:9px;font-size:13.5px;line-height:1.4}
+.incluye li::before{content:"";flex:none;width:16px;height:16px;margin-top:2px;border-radius:50%;background:var(--oks) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236FCE9C' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/10px no-repeat}
+.precio{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:12px 14px;border-radius:12px;background:var(--sol);border:1px solid var(--linea2)}
+.precio .v{font-family:var(--mo);font-weight:600;font-size:15px}
+.precio .k{font-size:12.5px;color:var(--tinta2)}
+.exito{display:grid;justify-items:center;text-align:center;gap:8px;padding:10px 0}
+.exito svg{width:58px;height:58px}
+.exito circle{fill:var(--oks);stroke:var(--ok);stroke-width:2.5}
+.exito path{fill:none;stroke:var(--ok);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:36;stroke-dashoffset:36;animation:traza .4s .15s forwards}
+@keyframes traza{to{stroke-dashoffset:0}}
+
+.toast{position:fixed;z-index:60;left:0;right:0;margin-inline:auto;top:calc(env(safe-area-inset-top,0px) + 14px);width:max-content;
+  max-width:calc(100% - 32px);padding:11px 18px;border-radius:100px;font-size:14px;font-weight:500;text-align:center;
+  background:rgba(13,31,33,.92);border:1px solid var(--linea);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);
+  transform:translateY(-160%);opacity:0;transition:transform .45s var(--resorte),opacity .3s;pointer-events:none}
+.toast.ve{transform:none;opacity:1}
+
+@media (max-width:860px){
+  .alterna{display:grid}
+  .rejilla{grid-template-columns:minmax(0,1fr)}
+  .rejilla[data-vista="ajustes"] .previa{display:none}
+  .rejilla[data-vista="previa"] .ajustes{display:none}
+  .previa{position:static}
+  .top .yo a:not(.ver){display:none}
+}
+@media (max-width:380px){.tel{height:600px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="fondo"></div><div class="velo"></div><div class="grano"></div>
+
+<header class="cab">
+  <div class="top">
+    <span class="neg">Barbería Pruebas</span>
+    <span class="esp"></span>
+    <span class="yo">Ana · dueña <a class="ver" href="#" data-toast="Esto abriría tu página pública">Ver la página</a><a href="#">Mi cuenta</a><a href="#">Salir</a></span>
+  </div>
+  <nav aria-label="Secciones">
+    <a href="#">Hoy</a><a href="#">Sellar</a><a href="#">Opiniones</a><a href="#">Clientes</a><a href="#">Operación</a>
+    <a href="#">Campañas</a><a href="#">Equipo</a><a href="#">Programa</a><a href="#" aria-current="page">Mi página<span class="nuevo">NUEVO</span></a>
+  </nav>
+</header>
+
+<main>
+  <span class="maqueta">Maqueta · nada de esto se guarda</span>
+  <h1>Mi página</h1>
+  <p>Así te ven tus clientes cuando escanean el QR o tocan la placa. Cambia lo que quieras: la vista previa se actualiza al momento y nada se publica hasta que guardas.</p>
+
+  <div class="alterna" role="group" aria-label="Qué ver">
+    <button type="button" id="v-ajustes" aria-pressed="true">Ajustes</button>
+    <button type="button" id="v-previa" aria-pressed="false">Vista previa</button>
+  </div>
+
+  <div class="rejilla" id="rejilla" data-vista="ajustes">
+    <div class="ajustes">
+
+      <section class="caja" aria-labelledby="t-tema">
+        <h2 id="t-tema">Tema</h2>
+        <p class="sub">El estilo de toda la página. Los dos muestran lo mismo; cambia cómo se ve.</p>
+        <div class="opciones dos" role="radiogroup" aria-labelledby="t-tema" id="temas">
+          <button type="button" class="opc" role="radio" aria-checked="false" data-tema="ios">
+            <span class="mini"><span class="mtema ios"><span class="a"></span><span class="b"><i></i><i class="btn"></i><i></i><i></i></span></span></span>
+            <span class="n">Claro</span><span class="d">Limpio, estilo iPhone</span>
+          </button>
+          <button type="button" class="opc" role="radio" aria-checked="true" data-tema="vidrio">
+            <span class="mini"><span class="mtema vid"><span class="a"></span><span class="b"><i></i><i class="btn"></i><i></i><i></i></span></span></span>
+            <span class="n">Vidrio nocturno</span><span class="d">Oscuro, con tu color</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="caja" aria-labelledby="t-portada">
+        <h2 id="t-portada">Portada</h2>
+        <p class="sub">La imagen de arriba. Elige una de barbería, sube una foto de tu local o pide una hecha a la medida.</p>
+        <div class="opciones portadas" role="radiogroup" aria-labelledby="t-portada" id="portadas"></div>
+        <input type="file" id="foto" accept="image/*" hidden>
+      </section>
+
+      <section class="caja" aria-labelledby="t-color">
+        <h2 id="t-color">Color de tu marca</h2>
+        <p class="sub">Se usa en botones, sellos e íconos. Si un color no se lee bien sobre el tema, lo ajustamos solos.</p>
+        <div class="muestras" role="radiogroup" aria-labelledby="t-color" id="muestras"></div>
+        <div class="contraste" id="contraste" aria-live="polite"></div>
+      </section>
+
+      <section class="caja" aria-labelledby="t-id">
+        <h2 id="t-id">Nombre y logo</h2>
+        <p class="sub">Tu logo va en el círculo que monta sobre la portada.</p>
+        <div class="logo-fila">
+          <span class="logo-vista" id="logo-vista">B<span style="color:var(--ac)">P</span></span>
+          <div class="botones">
+            <label class="btn" for="logo">Subir logo<input type="file" id="logo" accept="image/*"></label>
+            <button type="button" class="btn" id="logo-quitar" hidden>Usar iniciales</button>
+          </div>
+        </div>
+        <label class="et" for="nombre">Nombre del negocio</label>
+        <input type="text" id="nombre" value="Barbería Pruebas" maxlength="40">
+        <label class="et" for="bienv">Mensaje de bienvenida</label>
+        <div class="campo">
+          <textarea id="bienv" maxlength="120">Cortes clásicos y fades en el Centro. Te esperamos.</textarea>
+          <span class="cuenta-car" id="bienv-n"></span>
+        </div>
+      </section>
+
+      <section class="caja" aria-labelledby="t-bot">
+        <h2 id="t-bot">Botones de tu página</h2>
+        <p class="sub">Apaga los que no uses. La tarjeta de sellos siempre va.</p>
+        <div class="lista" id="interruptores"></div>
+      </section>
+    </div>
+
+    <aside class="previa" aria-label="Vista previa">
+      <span class="leyenda">Vista previa en vivo</span>
+      <div class="tel">
+        <div class="pant" id="pant" data-tema="vidrio">
+          <div class="p-portada" id="p-portada"></div>
+          <div class="p-hoja">
+            <div class="p-logo" id="p-logo">B<b>P</b></div>
+            <div class="p-id">
+              <div class="p-nombre" id="p-nombre">Barbería Pruebas</div>
+              <div class="p-estado"><i></i>Abierto hoy hasta las 8:00 pm</div>
+              <p class="p-bienv" id="p-bienv"></p>
+            </div>
+            <div class="p-card p-tarj">
+              <div class="enc">
+                <span class="p-ic"><svg viewBox="0 0 24 24" class="lleno" aria-hidden="true"><path d="M12 20.3s-7.4-4.5-9.2-9.3C1.7 7.9 3.8 4.6 7.2 4.6c2 0 3.6 1.1 4.8 2.8 1.2-1.7 2.8-2.8 4.8-2.8 3.4 0 5.5 3.3 4.4 6.4-1.8 4.8-9.2 9.3-9.2 9.3z"/></svg></span>
+                <div><div class="num"><b>2</b> / 6 sellos</div><div class="sub">para un corte gratis</div></div>
+              </div>
+              <div class="p-puntos"><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i></div>
+              <div class="p-btn">Ver mi tarjeta</div>
+            </div>
+            <div class="p-rows" id="p-rows"></div>
+            <div class="p-pie" id="p-pie">Tarjeta digital de Barbería Pruebas</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<div class="guardar" id="guardar" role="region" aria-label="Cambios sin guardar">
+  <span class="txt">Tienes cambios sin guardar</span>
+  <div class="botones">
+    <button type="button" class="btn" id="descartar">Descartar</button>
+    <button type="button" class="btn pri" id="guardar-btn">Guardar y publicar</button>
+  </div>
+</div>
+
+<dialog id="medida" aria-labelledby="medida-t">
+  <div class="dlg" id="medida-form">
+    <button type="button" class="cerrar" data-cerrar aria-label="Cerrar"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <h2 id="medida-t">Portada a la medida</h2>
+    <p>Nuestro estudio diseña una portada solo para tu local: tu fachada, tus colores y tu logo, en el estilo de tu página.</p>
+    <ul class="incluye">
+      <li>Dos propuestas para elegir</li>
+      <li>Un ajuste sobre la que elijas</li>
+      <li>Lista en tu página en 3 a 5 días hábiles</li>
+    </ul>
+    <div class="precio"><span class="k">Pago único, aparte de tu mensualidad</span><span class="v" id="precio-medida">$ por definir</span></div>
+    <label class="et" for="medida-idea" style="margin:0">¿Qué te gustaría que se viera?</label>
+    <textarea id="medida-idea" placeholder="Por ejemplo: la fachada con el toldo rojo y el sillón antiguo que tenemos junto a la ventana."></textarea>
+    <label class="btn" for="medida-fotos" style="justify-self:start">Adjuntar fotos del local<input type="file" id="medida-fotos" accept="image/*" multiple></label>
+    <span class="cuenta-car" id="medida-n" style="text-align:left"></span>
+    <button type="button" class="btn pri" id="medida-enviar" style="justify-content:center;padding:12px">Pedir mi portada</button>
+  </div>
+  <div class="dlg" id="medida-ok" hidden>
+    <button type="button" class="cerrar" data-cerrar aria-label="Cerrar"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="exito">
+      <svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24"/><path d="M15 27l7 7 15-16"/></svg>
+      <h2 style="padding:0">Pedido enviado</h2>
+      <p>Te escribimos por WhatsApp para confirmar y cobrar. Mientras tanto tu página sigue con la portada que tienes.</p>
+    </div>
+    <button type="button" class="btn" data-cerrar style="justify-content:center">Listo</button>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+
+  /* ---------- Color: contraste y ajuste automático ---------- */
+  function rgb(h) { h = h.replace("#", ""); return [0, 2, 4].map(function (i) { return parseInt(h.substr(i, 2), 16); }); }
+  function hex(c) { return "#" + c.map(function (v) { return Math.round(Math.max(0, Math.min(255, v))).toString(16).padStart(2, "0"); }).join("").toUpperCase(); }
+  function lum(h) { return rgb(h).map(function (v) { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); })
+      .reduce(function (a, v, i) { return a + v * [.2126, .7152, .0722][i]; }, 0); }
+  function contraste(a, b) { var x = lum(a), y = lum(b); return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); }
+  function mezcla(a, b, t) { var p = rgb(a), q = rgb(b); return hex(p.map(function (v, i) { return v + (q[i] - v) * t; })); }
+  // Fondo real sobre el que se ven íconos y sellos en cada tema
+  var FONDO_TEMA = { ios: "#FFFFFF", vidrio: "#12282B" };
+  function ajusta(ac, tema) {
+    var fondo = FONDO_TEMA[tema], hacia = tema === "ios" ? "#000000" : "#FFFFFF", c = ac, t = 0;
+    while (contraste(c, fondo) < 3 && t < 1) { t += .05; c = mezcla(ac, hacia, t); }
+    return { color: c, ajustado: c !== ac };
+  }
+  function tintaSobre(c) { return contraste(c, "#FFFFFF") >= contraste(c, "#20150A") ? "#FFFFFF" : "#20150A"; }
+
+  /* ---------- Portadas prehechas (SVG). Cada una recibe el acento y un sufijo para sus ids. ---------- */
+  var PORTADAS = {
+    clasica: { n: "Clásica", d: "Espejo, sillón y lámpara cálida", svg: function (ac, u) { return '' +
+      '<svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>' +
+      '<linearGradient id="m' + u + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1B1411"/><stop offset=".7" stop-color="#34261E"/></linearGradient>' +
+      '<radialGradient id="l' + u + '"><stop offset="0" stop-color="#FFD9A1" stop-opacity=".6"/><stop offset="1" stop-color="#FF9D4D" stop-opacity="0"/></radialGradient>' +
+      '<linearGradient id="e' + u + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#76878A"/><stop offset="1" stop-color="#1D2425"/></linearGradient>' +
+      '<linearGradient id="o' + u + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E9C88E"/><stop offset=".5" stop-color="#9F763D"/><stop offset="1" stop-color="#D8B06D"/></linearGradient>' +
+      '<pattern id="f' + u + '" width="40" height="20" patternUnits="userSpaceOnUse" patternTransform="rotate(-30)"><rect width="40" height="20" fill="#F4EFE6"/><rect width="40" height="6" fill="' + ac + '"/><rect y="10" width="40" height="6" fill="#27447A"/></pattern>' +
+      '<linearGradient id="c' + u + '" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3A120E"/><stop offset=".45" stop-color="#7E2C22"/><stop offset="1" stop-color="#360F0B"/></linearGradient></defs>' +
+      '<rect width="400" height="220" fill="url(#m' + u + ')"/><rect y="160" width="400" height="60" fill="#3B2718"/><rect y="157" width="400" height="4" fill="#6E4A2F"/>' +
+      '<circle cx="205" cy="40" r="150" fill="url(#l' + u + ')"/>' +
+      '<path d="M160 158V88a45 45 0 0 1 90 0v70z" fill="url(#e' + u + ')" stroke="url(#o' + u + ')" stroke-width="5"/>' +
+      '<path d="M165 150 222 50h14L178 150z" fill="#fff" opacity=".08"/>' +
+      '<path d="M205 0v22" stroke="#0E0B09" stroke-width="1.5"/><path d="M190 34c0-10 7-14 15-14s15 4 15 14z" fill="url(#o' + u + ')"/><ellipse cx="205" cy="34" rx="15" ry="2.6" fill="#FFF4DC"/>' +
+      '<rect x="120" y="156" width="170" height="7" rx="2" fill="#E8E0D3"/><rect x="132" y="138" width="9" height="18" rx="2" fill="#B8742E"/><rect x="262" y="134" width="14" height="22" rx="3" fill="#3AA1B8" opacity=".8"/>' +
+      '<rect x="189" y="116" width="32" height="15" rx="7" fill="url(#c' + u + ')"/><path d="M181 150q0-9 9-9h30q9 0 9 9v70h-48z" fill="url(#c' + u + ')"/>' +
+      '<rect x="318" y="52" width="20" height="100" rx="3" fill="url(#f' + u + ')"/><rect x="315" y="47" width="26" height="6" rx="2" fill="#C9C9C9"/><rect x="315" y="151" width="26" height="6" rx="2" fill="#C9C9C9"/>' +
+      '<rect x="46" y="84" width="30" height="38" rx="1.5" fill="#EFE6D4" stroke="#8E6A38" stroke-width="2"/><circle cx="68" cy="114" r="2.4" fill="' + ac + '"/>' +
+      '</svg>'; } },
+    nocturna: { n: "Nocturna", d: "Verde profundo y latón", svg: function (ac, u) { return '' +
+      '<svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>' +
+      '<linearGradient id="p' + u + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#15464A"/><stop offset="1" stop-color="#081818"/></linearGradient>' +
+      '<radialGradient id="l' + u + '"><stop offset="0" stop-color="#FFB86B" stop-opacity=".5"/><stop offset="1" stop-color="#E8894A" stop-opacity="0"/></radialGradient>' +
+      '<linearGradient id="e' + u + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2F706D"/><stop offset="1" stop-color="#0B2124"/></linearGradient>' +
+      '<linearGradient id="o' + u + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F3C98A"/><stop offset=".5" stop-color="#9C6A34"/><stop offset="1" stop-color="#E2AE67"/></linearGradient>' +
+      '<pattern id="f' + u + '" width="18" height="18" patternUnits="userSpaceOnUse" patternTransform="rotate(-38)"><rect width="18" height="18" fill="#F4EEE6"/><rect width="18" height="6" fill="' + ac + '"/><rect y="9" width="18" height="4" fill="#1E6E5A"/></pattern></defs>' +
+      '<rect width="400" height="220" fill="url(#p' + u + ')"/><rect y="150" width="400" height="70" fill="#0A2224"/><rect y="148" width="400" height="2.5" fill="url(#o' + u + ')" opacity=".5"/>' +
+      '<circle cx="140" cy="50" r="110" fill="url(#l' + u + ')"/><circle cx="260" cy="44" r="120" fill="url(#l' + u + ')"/>' +
+      '<path d="M190 176V96a58 58 0 0 1 116 0v80z" fill="url(#o' + u + ')"/><path d="M196 172V96a52 52 0 0 1 104 0v76z" fill="url(#e' + u + ')"/>' +
+      '<rect x="233" y="118" width="46" height="60" rx="12" fill="#061314" opacity=".7"/>' +
+      '<path d="M140 0v20M260 0v12" stroke="#050505" stroke-width="1.2"/><path d="M128 30q12-18 24 0z M248 22q12-18 24 0z" fill="#17110D"/>' +
+      '<circle cx="140" cy="31" r="9" fill="#FFD9A0" opacity=".7"/><circle cx="260" cy="23" r="9" fill="#FFD9A0" opacity=".7"/>' +
+      '<rect x="62" y="58" width="18" height="100" fill="url(#f' + u + ')"/><rect x="59" y="52" width="24" height="7" rx="3" fill="url(#o' + u + ')"/><rect x="59" y="157" width="24" height="7" rx="3" fill="url(#o' + u + ')"/>' +
+      '<ellipse cx="352" cy="160" rx="6" ry="22" transform="rotate(-20 352 160)" fill="#1F5A48"/><ellipse cx="366" cy="156" rx="6" ry="26" transform="rotate(15 366 156)" fill="#2B7560"/><path d="M346 182h30l-4 26h-22z" fill="#1B1511"/>' +
+      '</svg>'; } },
+    neon: { n: "Neón", d: "Ladrillo y letrero encendido", svg: function (ac, u) { return '' +
+      '<svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>' +
+      '<pattern id="b' + u + '" width="40" height="20" patternUnits="userSpaceOnUse"><rect width="40" height="20" fill="#221714"/><path d="M0 19.5h40M20 0v10M0 10h40M40 10v10" stroke="#120C0A" stroke-width="1.6"/></pattern>' +
+      '<radialGradient id="g' + u + '"><stop offset="0" stop-color="' + ac + '" stop-opacity=".55"/><stop offset="1" stop-color="' + ac + '" stop-opacity="0"/></radialGradient>' +
+      '<filter id="h' + u + '" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3.2"/></filter>' +
+      '<linearGradient id="v' + u + '" x1="0" y1="0" x2="0" y2="1"><stop offset=".45" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".6"/></linearGradient></defs>' +
+      '<rect width="400" height="220" fill="url(#b' + u + ')"/><ellipse cx="200" cy="100" rx="190" ry="110" fill="url(#g' + u + ')"/>' +
+      '<g fill="none" stroke-linecap="round" stroke-linejoin="round">' +
+      '<rect x="110" y="62" width="180" height="62" rx="31" stroke="' + ac + '" stroke-width="6" filter="url(#h' + u + ')"/><rect x="110" y="62" width="180" height="62" rx="31" stroke="#FFE8E0" stroke-width="1.6"/>' +
+      '<text x="200" y="104" text-anchor="middle" font-family="Archivo,system-ui,sans-serif" font-weight="600" font-size="26" letter-spacing="8" stroke="' + ac + '" stroke-width="4" filter="url(#h' + u + ')">BARBER</text>' +
+      '<text x="200" y="104" text-anchor="middle" font-family="Archivo,system-ui,sans-serif" font-weight="600" font-size="26" letter-spacing="8" fill="#FFF1EC" stroke="none">BARBER</text>' +
+      '<g transform="translate(186 140)" stroke="' + ac + '" stroke-width="3.5" filter="url(#h' + u + ')"><circle cx="6" cy="6" r="5"/><circle cx="6" cy="24" r="5"/><path d="M10 9l20 17M10 21l20-17"/></g>' +
+      '<g transform="translate(186 140)" stroke="#FFE8E0" stroke-width="1.3"><circle cx="6" cy="6" r="5"/><circle cx="6" cy="24" r="5"/><path d="M10 9l20 17M10 21l20-17"/></g></g>' +
+      '<rect width="400" height="220" fill="url(#v' + u + ')"/></svg>'; } },
+    franjas: { n: "Franjas", d: "El poste de barbero, abstracto", svg: function (ac, u) { return '' +
+      '<svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>' +
+      '<pattern id="f' + u + '" width="96" height="96" patternUnits="userSpaceOnUse" patternTransform="rotate(-32)"><rect width="96" height="96" fill="#F4EEE6"/><rect width="96" height="30" fill="' + ac + '"/><rect y="48" width="96" height="22" fill="#20314F"/></pattern>' +
+      '<linearGradient id="s' + u + '" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".45"/><stop offset=".35" stop-color="#fff" stop-opacity=".22"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".5"/></linearGradient>' +
+      '<radialGradient id="v' + u + '" cx=".5" cy=".45" r=".8"><stop offset=".5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".55"/></radialGradient></defs>' +
+      '<rect width="400" height="220" fill="#101722"/><rect x="-20" y="-20" width="440" height="260" fill="url(#f' + u + ')"/>' +
+      '<rect x="-20" y="-20" width="440" height="260" fill="url(#s' + u + ')"/><rect width="400" height="220" fill="url(#v' + u + ')"/></svg>'; } },
+    herramientas: { n: "Herramientas", d: "Tijeras y peines en tu color", svg: function (ac, u) {
+      var osc = mezcla(ac, "#000000", .55);
+      return '' +
+      '<svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>' +
+      '<linearGradient id="g' + u + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="' + ac + '"/><stop offset="1" stop-color="' + osc + '"/></linearGradient>' +
+      '<pattern id="t' + u + '" width="84" height="84" patternUnits="userSpaceOnUse" patternTransform="rotate(-14)"><g fill="none" stroke="#fff" stroke-opacity=".22" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
+      '<g transform="translate(8 8)"><circle cx="5" cy="5" r="4.5"/><circle cx="5" cy="21" r="4.5"/><path d="M9 8l18 15M9 18l18-15"/></g>' +
+      '<g transform="translate(50 10)"><rect x="0" y="0" width="26" height="7" rx="2"/><path d="M3 7v8M8 7v8M13 7v8M18 7v8M23 7v8"/></g>' +
+      '<g transform="translate(14 50)"><path d="M0 12h22l6-6H6z"/><path d="M22 12l8 8"/></g>' +
+      '<g transform="translate(54 48)"><circle cx="10" cy="10" r="9"/><path d="M6 10h8M10 6v8"/></g></g></pattern>' +
+      '<radialGradient id="v' + u + '" cx=".5" cy=".4" r=".85"><stop offset=".45" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".45"/></radialGradient></defs>' +
+      '<rect width="400" height="220" fill="url(#g' + u + ')"/><rect width="400" height="220" fill="url(#t' + u + ')"/><rect width="400" height="220" fill="url(#v' + u + ')"/></svg>'; } }
+  };
+
+  var MUESTRAS = [
+    ["#D9503C", "Rojo barbería"], ["#C2682F", "Terracota"], ["#D9A21B", "Mostaza"], ["#2F8F5B", "Verde"],
+    ["#2D6CDF", "Azul"], ["#7A4FD0", "Morado"], ["#D6457F", "Rosa"], ["#E8E4DC", "Hueso"]
+  ];
+
+  var ICONOS = {
+    google: '<path d="M12 3l2.7 5.9 6.3.7-4.7 4.4 1.3 6.3L12 17.1 6.4 20.3l1.3-6.3L3 9.6l6.3-.7z"/>',
+    menu: '<path d="M6 3h12a1 1 0 0 1 1 1v16l-7-3-7 3V4a1 1 0 0 1 1-1z"/><path d="M9 8h6M9 12h4"/>',
+    whatsapp: '<path d="M21 12a9 9 0 0 1-13.3 7.9L3 21l1.2-4.5A9 9 0 1 1 21 12z"/><path d="M8.5 9.5c0 3.5 2.5 6 6 6"/>',
+    wifi: '<path d="M2.5 9a14 14 0 0 1 19 0"/><path d="M5.5 12.5a9.5 9.5 0 0 1 13 0"/><path d="M8.7 15.9a5 5 0 0 1 6.6 0"/><circle cx="12" cy="19.3" r=".9"/>',
+    opinion: '<path d="M20 12a8 8 0 0 1-11.6 7.1L4 20l1-4.4A8 8 0 1 1 20 12z"/><path d="M9 11h6M9 14h3.5"/>',
+    ubicacion: '<path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/>',
+    instagram: '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.4" cy="6.6" r=".8"/>',
+    llamar: '<path d="M6 3h4l2 5-2.5 1.5a12 12 0 0 0 5 5L16 12l5 2v4a2 2 0 0 1-2.2 2A17 17 0 0 1 4 5.2 2 2 0 0 1 6 3z"/>'
+  };
+  // [clave, título, detalle, ícono, pastel iOS, tinta iOS, encendido al inicio]
+  var BOTONES = [
+    ["resena", "Dejar reseña en Google", "La misma invitación para todos", "google", "#FCEFD9", "#A2660F", true],
+    ["servicios", "Ver servicios y precios", "Tu lista de precios", "menu", "#FCE7E3", "#C8432F", true],
+    ["reservar", "Reservar por WhatsApp", "Te llega el mensaje armado", "whatsapp", "#E1F4E8", "#1E8A4B", true],
+    ["wifi", "Conectar al Wi‑Fi", "Red y contraseña para clientes", "wifi", "#E4EDFB", "#2D68D6", true],
+    ["opinion", "Opinión anónima", "Solo la lees tú", "opinion", "#ECE7FB", "#6A4FD0", true],
+    ["llegar", "Cómo llegar", "Dirección y horario", "ubicacion", "#DDF2F4", "#12808E", true],
+    ["instagram", "Síguenos en Instagram", "@barberiapruebas", "instagram", "#FBE5EF", "#B8336F", true],
+    ["llamar", "Llamar", "Para quien prefiere hablar", "llamar", "#EEF0F4", "#4A515E", false]
+  ];
+
+  /* ---------- Estado ---------- */
+  var INICIAL = { tema: "vidrio", portada: "nocturna", color: "#D9503C", nombre: "Barbería Pruebas",
+    bienv: "Cortes clásicos y fades en el Centro. Te esperamos.", logo: null, foto: null,
+    botones: BOTONES.reduce(function (o, b) { o[b[0]] = b[6]; return o; }, {}) };
+  function copia(o) { return JSON.parse(JSON.stringify(o)); }
+  var e = copia(INICIAL), guardado = copia(INICIAL);
+  var uid = 0;
+
+  /* ---------- Toast ---------- */
+  var tt;
+  function toast(m) { var t = $("#toast"); t.textContent = m; t.classList.add("ve"); clearTimeout(tt); tt = setTimeout(function () { t.classList.remove("ve"); }, 2600); }
+  document.addEventListener("click", function (ev) { var a = ev.target.closest("[data-toast]"); if (a) { ev.preventDefault(); toast(a.dataset.toast); } });
+  $$("nav a:not([aria-current]), .top .yo a:not(.ver)").forEach(function (a) { a.addEventListener("click", function (ev) { ev.preventDefault(); toast("En la maqueta solo funciona Mi página"); }); });
+
+  /* ---------- Construir controles ---------- */
+  var ICO_SUBIR = '<svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>';
+  var ICO_MEDIDA = '<svg viewBox="0 0 24 24"><path d="M12 3l1.8 4.6L18.5 9l-4.7 1.5L12 15l-1.8-4.5L5.5 9l4.7-1.4z"/><path d="M18 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg>';
+  function pintaPortadas() {
+    var caja = $("#portadas"), html = "";
+    Object.keys(PORTADAS).forEach(function (k) {
+      var p = PORTADAS[k];
+      html += '<button type="button" class="opc" role="radio" data-portada="' + k + '" aria-checked="' + (e.portada === k) + '">' +
+        '<span class="mini">' + p.svg(e.color, "t" + (++uid)) + '</span><span class="n">' + p.n + '</span><span class="d">' + p.d + '</span></button>';
+    });
+    html += '<button type="button" class="opc subir" role="radio" data-portada="foto" aria-checked="' + (e.portada === "foto") + '">' +
+      '<span class="mini">' + (e.foto ? '<img src="' + e.foto + '" alt="">' : ICO_SUBIR) + '</span><span class="n">' + (e.foto ? "Tu foto" : "Subir mi foto") + '</span>' +
+      '<span class="d">' + (e.foto ? "Toca para cambiarla" : "Le ponemos un velo para que se lea tu nombre") + '</span></button>';
+    html += '<button type="button" class="opc medida" data-medida="1">' +
+      '<span class="mini">' + ICO_MEDIDA + '</span><span class="n">A la medida <span class="pastilla costo">Con costo</span></span>' +
+      '<span class="d">La diseña nuestro estudio para tu local</span></button>';
+    caja.innerHTML = html;
+  }
+  $("#portadas").addEventListener("click", function (ev) {
+    var b = ev.target.closest(".opc"); if (!b) return;
+    if (b.dataset.medida) { abreMedida(); return; }
+    var k = b.dataset.portada;
+    if (k === "foto" && (!e.foto || e.portada === "foto")) { $("#foto").click(); return; }
+    e.portada = k; todo();
+  });
+  $("#foto").addEventListener("change", function () {
+    var f = this.files && this.files[0]; if (!f) return;
+    var r = new FileReader();
+    r.onload = function () { e.foto = r.result; e.portada = "foto"; todo(); toast("Foto lista. Así se vería con el velo encima."); };
+    r.readAsDataURL(f); this.value = "";
+  });
+
+  $("#temas").addEventListener("click", function (ev) {
+    var b = ev.target.closest(".opc"); if (!b) return; e.tema = b.dataset.tema; todo();
+  });
+
+  function pintaMuestras() {
+    var caja = $("#muestras"), esLista = MUESTRAS.some(function (m) { return m[0] === e.color; });
+    caja.innerHTML = MUESTRAS.map(function (m) {
+      return '<button type="button" class="muestra" role="radio" style="--m:' + m[0] + '" data-color="' + m[0] + '" aria-checked="' + (e.color === m[0]) + '" aria-label="' + m[1] + '" title="' + m[1] + '"></button>';
+    }).join("") + '<label class="muestra otro" role="radio" aria-checked="' + !esLista + '" title="Otro color"><span class="sr" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Otro color</span><input type="color" id="otro" value="' + e.color.toLowerCase() + '"></label>';
+  }
+  $("#muestras").addEventListener("click", function (ev) {
+    var b = ev.target.closest(".muestra[data-color]"); if (!b) return; e.color = b.dataset.color; todo();
+  });
+  $("#muestras").addEventListener("input", function (ev) {
+    if (ev.target.id !== "otro") return; e.color = ev.target.value.toUpperCase(); todo(true);
+  });
+
+  function pintaInterruptores() {
+    $("#interruptores").innerHTML = '<div class="sw fijo"><span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2.6"/><path d="M3 10h18"/></svg></span>' +
+      '<span class="tt"><span class="t">Tarjeta de sellos</span><span class="s">Siempre visible</span></span><span class="pal" style="background:var(--ac);border-color:var(--ac)"></span></div>' +
+      BOTONES.map(function (b) {
+        return '<label class="sw"><span class="ico"><svg viewBox="0 0 24 24">' + ICONOS[b[3]] + '</svg></span>' +
+          '<span class="tt"><span class="t">' + b[1] + '</span><span class="s">' + b[2] + '</span></span>' +
+          '<input type="checkbox" id="b-' + b[0] + '" data-boton="' + b[0] + '"' + (e.botones[b[0]] ? " checked" : "") + '><span class="pal"></span></label>';
+      }).join("");
+  }
+  $("#interruptores").addEventListener("change", function (ev) {
+    var k = ev.target.dataset.boton; if (!k) return; e.botones[k] = ev.target.checked; todo(true);
+  });
+
+  $("#nombre").addEventListener("input", function () { e.nombre = this.value; todo(true); });
+  $("#bienv").addEventListener("input", function () { e.bienv = this.value; todo(true); });
+  $("#logo").addEventListener("change", function () {
+    var f = this.files && this.files[0]; if (!f) return;
+    var r = new FileReader(); r.onload = function () { e.logo = r.result; todo(true); }; r.readAsDataURL(f); this.value = "";
+  });
+  $("#logo-quitar").addEventListener("click", function () { e.logo = null; todo(true); });
+
+  /* ---------- Pintar la vista previa ---------- */
+  function iniciales(n) {
+    var p = n.replace(/barber[ií]a/i, "").trim().split(/\s+/).filter(Boolean);
+    if (!p.length) p = n.trim().split(/\s+/);
+    return ((p[0] || "?")[0] + (p[1] ? p[1][0] : "")).toUpperCase();
+  }
+  function todo(sinControles) {
+    var aj = ajusta(e.color, e.tema), pac = aj.color, root = document.documentElement;
+    // El panel entero toma el color, como el panel real toma la marca del local
+    root.style.setProperty("--ac", e.color);
+    root.style.setProperty("--acx", tintaSobre(e.color));
+    var pant = $("#pant");
+    pant.dataset.tema = e.tema;
+    pant.style.setProperty("--pac", pac);
+    pant.style.setProperty("--pacx", tintaSobre(pac));
+    pant.style.setProperty("--pact", pac);
+    pant.style.setProperty("--pacs", e.tema === "ios" ? mezcla(pac, "#FFFFFF", .86) : "color-mix(in srgb," + pac + " 22%, transparent)");
+
+    // Portada
+    var port = $("#p-portada");
+    if (e.portada === "foto" && e.foto) port.innerHTML = '<img src="' + e.foto + '" alt=""><span class="p-velo"></span>';
+    else port.innerHTML = PORTADAS[e.portada].svg(pac, "p" + (++uid));
+
+    // Identidad
+    var nombre = e.nombre.trim() || "Tu negocio", ini = iniciales(nombre);
+    $("#p-nombre").textContent = nombre;
+    $("#p-pie").textContent = "Tarjeta digital de " + nombre;
+    $("#p-bienv").textContent = e.bienv.trim();
+    $("#p-bienv").hidden = !e.bienv.trim();
+    $("#bienv-n").textContent = e.bienv.length + " / 120";
+    var logoHtml = e.logo ? '<img src="' + e.logo + '" alt="">' : (ini.length > 1 ? ini[0] + "<b>" + ini[1] + "</b>" : ini);
+    $("#p-logo").innerHTML = logoHtml;
+    $("#logo-vista").innerHTML = e.logo ? '<img src="' + e.logo + '" alt="">' : (ini.length > 1 ? ini[0] + '<span style="color:var(--ac)">' + ini[1] + "</span>" : ini);
+    $("#logo-quitar").hidden = !e.logo;
+
+    // Botones
+    $("#p-rows").innerHTML = BOTONES.filter(function (b) { return e.botones[b[0]]; }).map(function (b) {
+      return '<div class="p-card p-row"><span class="p-ic" style="--pc:' + b[4] + ';--pci:' + b[5] + '"><svg viewBox="0 0 24 24">' + ICONOS[b[3]] + '</svg></span>' +
+        '<span class="t">' + b[1] + '</span><svg class="fl" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></div>';
+    }).join("");
+
+    // Aviso de contraste
+    var c = $("#contraste");
+    if (aj.ajustado) {
+      c.innerHTML = '<span class="c" style="--cc:' + pac + '"></span><span><b>Lo ajustamos para que se lea.</b> Sobre el tema ' +
+        (e.tema === "ios" ? "claro" : "nocturno") + ' tu color casi no se ve, así que en íconos y sellos usamos esta versión ' +
+        (e.tema === "ios" ? "más oscura" : "más clara") + '. Tus botones conservan el original.</span>';
+    } else {
+      c.innerHTML = '<span class="c" style="--cc:' + pac + '"></span><span><b>Se lee bien</b> sobre el tema ' + (e.tema === "ios" ? "claro" : "nocturno") + '.</span>';
+    }
+
+    if (!sinControles) { pintaPortadas(); pintaMuestras(); }
+    $$("#temas .opc").forEach(function (b) { b.setAttribute("aria-checked", String(b.dataset.tema === e.tema)); });
+    $("#guardar").classList.toggle("ve", JSON.stringify(e) !== JSON.stringify(guardado));
+  }
+
+  $("#descartar").addEventListener("click", function () {
+    e = copia(guardado);
+    $("#nombre").value = e.nombre; $("#bienv").value = e.bienv;
+    pintaInterruptores(); todo(); toast("Cambios descartados");
+  });
+  $("#guardar-btn").addEventListener("click", function () {
+    guardado = copia(e); todo(true); toast("Guardado. Tus clientes ya ven la página nueva.");
+  });
+
+  /* ---------- Vista en celular ---------- */
+  function vista(v) {
+    $("#rejilla").dataset.vista = v;
+    $("#v-ajustes").setAttribute("aria-pressed", String(v === "ajustes"));
+    $("#v-previa").setAttribute("aria-pressed", String(v === "previa"));
+  }
+  $("#v-ajustes").addEventListener("click", function () { vista("ajustes"); });
+  $("#v-previa").addEventListener("click", function () { vista("previa"); window.scrollTo({ top: 0, behavior: "smooth" }); });
+
+  /* ---------- Portada a la medida ---------- */
+  var dlg = $("#medida");
+  function abreMedida() {
+    $("#medida-form").hidden = false; $("#medida-ok").hidden = true;
+    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", "");
+  }
+  dlg.addEventListener("click", function (ev) {
+    if (ev.target.closest("[data-cerrar]") || ev.target === dlg) dlg.close ? dlg.close() : dlg.removeAttribute("open");
+  });
+  $("#medida-fotos").addEventListener("change", function () {
+    var n = this.files ? this.files.length : 0;
+    $("#medida-n").textContent = n ? (n === 1 ? "1 foto adjunta" : n + " fotos adjuntas") : "";
+  });
+  $("#medida-enviar").addEventListener("click", function () {
+    $("#medida-form").hidden = true; $("#medida-ok").hidden = false;
+    $("#medida-idea").value = ""; $("#medida-fotos").value = ""; $("#medida-n").textContent = "";
+  });
+
+  pintaInterruptores();
+  todo();
+})();
+</script>
